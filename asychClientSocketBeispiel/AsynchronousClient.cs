@@ -44,9 +44,9 @@ namespace asychClientSocketBeispiel {
         public static Form1 formStatic;
 
         // ManualResetEvent instances signal completion.  
-        private static ManualResetEvent connectDone = new ManualResetEvent(false);
-        private static ManualResetEvent sendDone = new ManualResetEvent(false);
-        private static ManualResetEvent receiveDone = new ManualResetEvent(false);
+        public static ManualResetEvent connectDone = new ManualResetEvent(false);
+        public static ManualResetEvent sendDone = new ManualResetEvent(false);
+        public static ManualResetEvent receiveDone = new ManualResetEvent(false);
 
         // The response from the remote device.  
         private static String response = String.Empty;
@@ -124,7 +124,7 @@ namespace asychClientSocketBeispiel {
         static void sendThread(Object client) {
             // Send test data to the remote device.  
             string text = "beg{" + "1" + ":" + name + ":" + ipAddress + ":♥" + "}end";
-            while (true) {
+            while (Form1.run) {
                 Send((Socket)client, text);
                 Thread.Sleep(1000);
             }
@@ -163,7 +163,10 @@ namespace asychClientSocketBeispiel {
                 state.workSocket = client;
 
                 // Begin receiving the data from the remote device.  
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+                if (Form1.run) {
+                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+                }
+                
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
@@ -181,7 +184,7 @@ namespace asychClientSocketBeispiel {
 
                 if (bytesRead > 0) {
                     // There might be more data, so store the data received so far.  
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                    state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
                     Console.WriteLine("Empfangen: "+state.sb.ToString());
                     string response = state.sb.ToString();
 
@@ -205,7 +208,7 @@ namespace asychClientSocketBeispiel {
                             responeOhneAktion += responseOhneHeaderUndTailer[j];
                         }
 
-                        List<Peer> peerListeLokal = new List<Peer>();
+                        List<Peer> peersListeLokal = new List<Peer>();
 
                         //int count = 0;
                         //for (int i = 0; i < response.Length; i++) {
@@ -226,15 +229,84 @@ namespace asychClientSocketBeispiel {
                             }
                             if (!tmp.Equals("")) {
                                 peersAlsStrings.Add(tmp);
-                            }
-                            
+                            }                          
                         }
+
+                        foreach (string item in peersAlsStrings) {
+                            Peer p = new Peer();
+                            int j = 0;
+                            for(j = 0; j < item.Length; j++) {
+                                if(item[j] == ':') {
+                                    break;
+                                }
+                                p.name += item[j];
+                            }
+                            j++;
+                            for (; j < item.Length; j++) {
+                                if (item[j] == ':') {
+                                    break;
+                                }
+                                p.ip += item[j];
+                            }
+                            j++;
+                            for (; j < item.Length; j++) {
+                                if (item[j] == ':') {
+                                    break;
+                                }
+                                p.os += item[j];
+                            }
+                            peersListeLokal.Add(p);
+                        }
+
+                        if(peersListeLokal.Count != peersListe.Count) {                                                     
+                            peersListe = peersListeLokal;
+                            formStatic.Invoke((MethodInvoker)delegate {
+                                int k= 1;
+                                formStatic.peersListe.Items.Clear();
+                                foreach (Peer item in peersListe) {
+                                    ListViewItem newItem = new ListViewItem(Convert.ToString(k++));
+                                    newItem.SubItems.Add(item.name);
+                                    newItem.SubItems.Add(item.ip);
+                                    newItem.SubItems.Add(item.os);
+
+                                    formStatic.peersListe.Items.Add(newItem);
+                                }
+                            });
+
+                        } else {
+                            for (int i = 0; i < peersListe.Count; i++) {
+                                if (!peersListe[i].ip.Equals(peersListeLokal[i].ip)){
+                                    peersListe = peersListeLokal;
+                                    formStatic.Invoke((MethodInvoker)delegate {
+                                        int k = 1;
+                                        formStatic.peersListe.Items.Clear();
+                                        foreach (Peer item in peersListe) {
+                                            ListViewItem newItem = new ListViewItem(Convert.ToString(k++));
+                                            newItem.SubItems.Add(item.name);
+                                            newItem.SubItems.Add(item.ip);
+                                            newItem.SubItems.Add(item.os);
+
+                                            formStatic.peersListe.Items.Add(newItem);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        
                     }
 
 
-                    // Get the rest of the data.  
-                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
-                } else {
+
+                        // Get the rest of the data.  
+                        if (Form1.run) {
+                            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+                        }else {
+                        client.Disconnect(false);
+                        client.Close();
+                        client.Dispose();
+                        Application.Exit();
+                    }
+                    } else {
                     // All the data has arrived; put it in response.  
                     if (state.sb.Length > 1) {
                         response = state.sb.ToString();
@@ -249,10 +321,12 @@ namespace asychClientSocketBeispiel {
 
         private static void Send(Socket client, String data) {
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            byte[] byteData = Encoding.UTF8.GetBytes(data);
 
             // Begin sending the data to the remote device.  
-            client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+            if (Form1.run) {
+                client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+            }
         }
 
         private static void SendCallback(IAsyncResult ar) {
