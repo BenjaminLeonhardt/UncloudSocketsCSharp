@@ -23,8 +23,28 @@ namespace asychClientSocketBeispiel {
         public static ManualResetEvent sendDone = new ManualResetEvent(false);
         public static ManualResetEvent receiveDone = new ManualResetEvent(false);
 
+        public static string UncloudConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Uncloud\\";
+        public static string UncloudConfigFilename = "config.ini";
         public Form1() {
             InitializeComponent();
+            if (File.Exists(UncloudConfigPath + UncloudConfigFilename)) {
+                FileStream stream = File.Open(UncloudConfigPath + UncloudConfigFilename, FileMode.Open);
+                BinaryReader reader = new BinaryReader(stream);
+                string[] dateiInhalt = reader.ReadString().Split(';');
+                ServerIPText.Text = dateiInhalt[0];
+                ServerPortText.Text = dateiInhalt[1];
+                nameTextBox.Text = dateiInhalt[2];
+                pfadTextBox.Text = dateiInhalt[3];
+                reader.Close();
+                stream.Close();
+            } else {
+                Directory.CreateDirectory(UncloudConfigPath);
+                FileStream stream = File.Open(UncloudConfigPath + UncloudConfigFilename, FileMode.Create);
+                BinaryWriter writer = new BinaryWriter(stream);
+                writer.Write("192.168.2.100;5000;Ben;" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                writer.Close();
+                stream.Close();
+            }
             peersListe.FullRowSelect = true;
             try {
                 ParameterizedThreadStart pts = new ParameterizedThreadStart(AsynchronousSocketListener.StartListening);
@@ -41,6 +61,14 @@ namespace asychClientSocketBeispiel {
         }
 
         private void verbindenButton_Click(object sender, EventArgs e) {
+
+
+            FileStream stream = File.Open(UncloudConfigPath + UncloudConfigFilename, FileMode.Create);
+            BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write(ServerIPText.Text + ";" + ServerPortText.Text + ";" + nameTextBox.Text + ";" + pfadTextBox.Text);
+            writer.Close();
+            stream.Close();
+
 
             Thread neuerThread = new Thread(threadMethode);
             neuerThread.Start();
@@ -67,11 +95,16 @@ namespace asychClientSocketBeispiel {
         private void button1_Click_1(object sender, EventArgs e) {
             FolderBrowserDialog objDialog = new FolderBrowserDialog();
             objDialog.Description = "Freigabe Ordner";
-            objDialog.SelectedPath = @"C:\";       // Vorgabe Pfad (und danach der gewählte Pfad)
+            objDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);       // Vorgabe Pfad (und danach der gewählte Pfad)
             DialogResult objResult = objDialog.ShowDialog(this);
             if (objResult == DialogResult.OK) {
                 pfadTextBox.Text = objDialog.SelectedPath;
             }
+            FileStream stream = File.Open(UncloudConfigPath + UncloudConfigFilename, FileMode.Create);
+            BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write(ServerIPText.Text + ";" + ServerPortText.Text + ";" + nameTextBox.Text + ";" + pfadTextBox.Text);
+            writer.Close();
+            stream.Close();
         }
 
         private void peersListe_SelectedIndexChanged(object sender, EventArgs e) {
