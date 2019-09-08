@@ -163,10 +163,9 @@ namespace asychClientSocketBeispiel {
                         IEnumerable<string> filePaths = Directory.EnumerateFiles(formStatic.pfadTextBox.Text);
                         List<string> dateienOhnePfad = new List<string>();
                         foreach (string str in filePaths) {
-                            dateienOhnePfad.Add(str.Substring(formStatic.pfadTextBox.Text.Length));
+                            dateienOhnePfad.Add(str.Substring(formStatic.pfadTextBox.Text.Length+1));
                         }
                         string answer = "beg{2☻";
-                        //answer += "Ben:192.168.2.100:Windows 10♥Klaus:192.168.2.130:Windows 10♥";
                         foreach (string str in dateienOhnePfad) {
                             answer += str + "♥";
                         }
