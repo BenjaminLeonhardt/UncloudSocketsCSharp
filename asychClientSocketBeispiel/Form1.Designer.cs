@@ -61,6 +61,8 @@
             // 
             // verbindenButton
             // 
+            this.verbindenButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.verbindenButton.Location = new System.Drawing.Point(308, 705);
             this.verbindenButton.Name = "verbindenButton";
             this.verbindenButton.Size = new System.Drawing.Size(75, 23);
@@ -71,6 +73,8 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Location = new System.Drawing.Point(729, 704);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
@@ -81,6 +85,8 @@
             // 
             // pfadTextBox
             // 
+            this.pfadTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.pfadTextBox.Location = new System.Drawing.Point(552, 706);
             this.pfadTextBox.Name = "pfadTextBox";
             this.pfadTextBox.Size = new System.Drawing.Size(170, 20);
@@ -89,6 +95,8 @@
             // 
             // nameTextBox
             // 
+            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.nameTextBox.Location = new System.Drawing.Point(552, 676);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(170, 20);
@@ -97,6 +105,8 @@
             // 
             // label7
             // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(417, 706);
@@ -107,6 +117,8 @@
             // 
             // label8
             // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(417, 678);
@@ -117,6 +129,8 @@
             // 
             // ServerPortText
             // 
+            this.ServerPortText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.ServerPortText.Location = new System.Drawing.Point(131, 706);
             this.ServerPortText.Name = "ServerPortText";
             this.ServerPortText.Size = new System.Drawing.Size(170, 20);
@@ -125,6 +139,8 @@
             // 
             // ServerIPText
             // 
+            this.ServerIPText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.ServerIPText.Location = new System.Drawing.Point(131, 676);
             this.ServerIPText.Name = "ServerIPText";
             this.ServerIPText.Size = new System.Drawing.Size(170, 20);
@@ -133,6 +149,8 @@
             // 
             // label6
             // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(11, 706);
@@ -143,6 +161,8 @@
             // 
             // label5
             // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(11, 678);
@@ -279,7 +299,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listView2);
             this.Controls.Add(this.peersListe);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(834, 807);
             this.MinimumSize = new System.Drawing.Size(834, 807);
             this.Name = "Form1";
@@ -295,7 +315,7 @@
         private System.Windows.Forms.Button button2;
         public System.Windows.Forms.Button verbindenButton;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox pfadTextBox;
+        public System.Windows.Forms.TextBox pfadTextBox;
         private System.Windows.Forms.TextBox nameTextBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
