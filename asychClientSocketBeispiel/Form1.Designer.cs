@@ -38,7 +38,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.filesView2 = new System.Windows.Forms.ListView();
             this.DateinameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.GroeßeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.FortschrittCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -212,18 +212,18 @@
             this.label1.TabIndex = 19;
             this.label1.Text = "Clients";
             // 
-            // listView2
+            // filesView2
             // 
-            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.filesView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.DateinameCol,
             this.GroeßeCol,
             this.FortschrittCol});
-            this.listView2.Location = new System.Drawing.Point(425, 89);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(383, 565);
-            this.listView2.TabIndex = 18;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.Details;
+            this.filesView2.Location = new System.Drawing.Point(425, 89);
+            this.filesView2.Name = "filesView2";
+            this.filesView2.Size = new System.Drawing.Size(383, 565);
+            this.filesView2.TabIndex = 18;
+            this.filesView2.UseCompatibleStateImageBehavior = false;
+            this.filesView2.View = System.Windows.Forms.View.Details;
             // 
             // DateinameCol
             // 
@@ -297,7 +297,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listView2);
+            this.Controls.Add(this.filesView2);
             this.Controls.Add(this.peersListe);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(834, 807);
@@ -327,7 +327,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        public System.Windows.Forms.ListView listView2;
+        public System.Windows.Forms.ListView filesView2;
         private System.Windows.Forms.ColumnHeader DateinameCol;
         private System.Windows.Forms.ColumnHeader GroeßeCol;
         private System.Windows.Forms.ColumnHeader FortschrittCol;

@@ -108,7 +108,7 @@ namespace asychClientSocketBeispiel {
 
             }
 
-
+            Thread.Sleep(100);
             //sendDone.WaitOne();
             sendThread(client);
 
@@ -168,9 +168,37 @@ namespace asychClientSocketBeispiel {
                     }
                     if (aktion == 2) {
                         //string pfad = pfadTextBox.Text;
-                        string[] filePaths = Directory.GetFiles(pfadTextBox.Text);
-                        
+                        //string[] filePaths = Directory.GetFiles(pfadTextBox.Text);
+                        //string responseString = "{beg";
+                        //foreach (string str in filePaths) {
+                        //    responseString += filePaths;
+                        //    responseString += "♥";
+                        //}
+                        //responseString += "}end";
+                        //Send(client, responseString);
+                        List<string> dateien = new List<string>();
+                        string tmp = "";
+                        for(int i=2;i<= responseOhneHeaderUndTailer.Length; i++) {
+                            if (responseOhneHeaderUndTailer[i]=='♥') {
+                                dateien.Add(tmp);
+                                tmp = "";
+                                i++; 
+                            }
+                            if(i< responseOhneHeaderUndTailer.Length) {
+                                tmp += responseOhneHeaderUndTailer[i];
+                            }   
+                        }
 
+
+                        Invoke((MethodInvoker)delegate {
+                            filesView2.Items.Clear();
+                            foreach (string item in dateien) {
+                                ListViewItem newItem = new ListViewItem(Convert.ToString(item));
+                                
+
+                                filesView2.Items.Add(newItem);
+                            }
+                        });
                     }
                     if (Form1.run) {
                         client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);

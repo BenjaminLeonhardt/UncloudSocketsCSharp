@@ -160,10 +160,14 @@ namespace asychClientSocketBeispiel {
                     aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
                     if (aktion == 2) {
 
-                        string[] filePaths = Directory.GetFiles(formStatic.pfadTextBox.Text);
+                        IEnumerable<string> filePaths = Directory.EnumerateFiles(formStatic.pfadTextBox.Text);
+                        List<string> dateienOhnePfad = new List<string>();
+                        foreach (string str in filePaths) {
+                            dateienOhnePfad.Add(str.Substring(formStatic.pfadTextBox.Text.Length));
+                        }
                         string answer = "beg{2☻";
                         //answer += "Ben:192.168.2.100:Windows 10♥Klaus:192.168.2.130:Windows 10♥";
-                        foreach (string str in filePaths) {
+                        foreach (string str in dateienOhnePfad) {
                             answer += str + "♥";
                         }
                         answer += "}end";
