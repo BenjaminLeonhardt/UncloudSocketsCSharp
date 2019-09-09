@@ -320,8 +320,12 @@ namespace asychClientSocketBeispiel {
 
             StateObject state = new StateObject();
             state.workSocket = client;
+
+            StateObject stateFile = new StateObject();
+            stateFile.workSocket = client;
             try {
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+               client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
+               client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
 
             } catch {
 
@@ -332,6 +336,16 @@ namespace asychClientSocketBeispiel {
             sendThreadFile(client,(string)filename);
 
         }
+
+        private static void AsynchronousFileSendCallback(IAsyncResult ar) {
+            // Retrieve the socket from the state object.
+            Socket client = (Socket)ar.AsyncState;
+
+            // Complete sending the data to the remote device.
+            client.EndSendFile(ar);
+            sendDone.Set();
+        }
+
 
         void sendThreadFile(Object client,string filename) {
 
