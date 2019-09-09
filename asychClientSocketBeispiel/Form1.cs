@@ -22,6 +22,7 @@ namespace asychClientSocketBeispiel {
         public static ManualResetEvent connectDone = new ManualResetEvent(false);
         public static ManualResetEvent sendDone = new ManualResetEvent(false);
         public static ManualResetEvent receiveDone = new ManualResetEvent(false);
+        public static string IpOfSelectedPeer = "";
 
         public static string UncloudConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Uncloud\\";
         public static string UncloudConfigFilename = "config.ini";
@@ -126,6 +127,7 @@ namespace asychClientSocketBeispiel {
 
         public void getFilesThread(Object ip) {
             string _ip = (string)ip;
+            IpOfSelectedPeer = _ip;
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), peersPort);
             Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
@@ -287,6 +289,45 @@ namespace asychClientSocketBeispiel {
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        private void filesView2_SelectedIndexChanged(object sender, EventArgs e) {
+            try {
+                string selectedItem = filesView2.SelectedItems[0].SubItems[0].Text;
+
+                try {
+                    ParameterizedThreadStart pts = new ParameterizedThreadStart(getThisFileThread);
+                    Thread sendThreadObj = new Thread(pts);
+                    sendThreadObj.Start(selectedItem);
+                } catch {
+
+                }
+
+            } catch {
+
+            }
+        }
+
+        public void getThisFileThread(Object filename) {
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(IpOfSelectedPeer), peersPort);
+            Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+
+            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+            connectDone.WaitOne();
+
+            StateObject state = new StateObject();
+            state.workSocket = client;
+            try {
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+
+            } catch {
+
+            }
+
+            Thread.Sleep(100);
+            //sendDone.WaitOne();
+            sendThread(client);
+
         }
     }
 }

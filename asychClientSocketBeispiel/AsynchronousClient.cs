@@ -54,7 +54,7 @@ namespace asychClientSocketBeispiel {
                 // Connect to the remote endpoint.  
                 client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
                 connectDone.WaitOne();
-
+                //client.BeginDisconnect(true, DisconnectCallback, client);
                 form.Invoke((MethodInvoker)delegate {
                     form.connectionText.Text = "Verbunden mit " + ip + ":" + port;
                     form.connectionText.ForeColor = Color.Green;
@@ -98,6 +98,12 @@ namespace asychClientSocketBeispiel {
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        private static void DisconnectCallback(IAsyncResult ar) {
+            // Complete the disconnect request.
+            Socket client = (Socket)ar.AsyncState;
+            client.EndDisconnect(ar);
         }
 
         static void sendThread(Object client) {
@@ -294,7 +300,19 @@ namespace asychClientSocketBeispiel {
                     receiveDone.Set();
                 }
             } catch (Exception e) {
-                Console.WriteLine(e.ToString());
+                Form1.run = false;
+                try {
+                    formStatic.Invoke((MethodInvoker)delegate {
+                        formStatic.connectionText.Text = "Disconnected";
+                        formStatic.connectionText.ForeColor = Color.Red;
+                        formStatic.verbindenButton.Enabled = true;
+
+                    });
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.Message);
+                }
+                
+                Console.WriteLine(e.Message);
             }
         }
 
