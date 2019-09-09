@@ -234,6 +234,9 @@ namespace asychClientSocketBeispiel {
                                 filesView2.Items.Add(newItem);
                             }
                         });
+                    }else if(aktion==3) {
+                        string[] mesageItems = responseOhneHeaderUndTailer.Split(':');
+                        client.SendFile(mesageItems[3]);
                     }
                     if (Form1.run) {
                         client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
@@ -326,7 +329,22 @@ namespace asychClientSocketBeispiel {
 
             Thread.Sleep(100);
             //sendDone.WaitOne();
-            sendThread(client);
+            sendThreadFile(client,(string)filename);
+
+        }
+
+        void sendThreadFile(Object client,string filename) {
+
+            string HostName = Dns.GetHostName();
+
+            IPHostEntry hostInfo = Dns.GetHostEntry(HostName);
+            //IpAdresse = hostInfo.AddressList[hostInfo.AddressList.Length - 1].ToString();
+
+            IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
+
+            // Send test data to the remote device.  
+            string text = "beg{" + "3" + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":filename:♥" + "}end";
+            Send((Socket)client, text);
 
         }
     }
