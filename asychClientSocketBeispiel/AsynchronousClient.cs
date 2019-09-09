@@ -304,16 +304,7 @@ namespace asychClientSocketBeispiel {
 
             // Begin sending the data to the remote device.  
             if (Form1.run) {
-                try
-                {
-                    client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-            
-                }
-                
+                client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
             }
         }
 
