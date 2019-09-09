@@ -224,6 +224,7 @@
             this.filesView2.TabIndex = 18;
             this.filesView2.UseCompatibleStateImageBehavior = false;
             this.filesView2.View = System.Windows.Forms.View.Details;
+            this.filesView2.SelectedIndexChanged += new System.EventHandler(this.filesView2_SelectedIndexChanged);
             // 
             // DateinameCol
             // 
