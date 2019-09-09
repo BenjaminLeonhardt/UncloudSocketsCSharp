@@ -175,8 +175,8 @@ namespace asychClientSocketBeispiel {
                         Send(handler, answer);
                     } else if (aktion == 3) {
                         string[] mesageItems = contentOhneHeaderUndTailer.Split(':');
-                        string pfadUndDateiname = formStatic.pfadTextBox.Text + mesageItems[3];
-                        handler.SendFile(formStatic.pfadTextBox.Text + mesageItems[3]);
+                        string pfadUndDateiname = formStatic.pfadTextBox.Text + "\\" + mesageItems[3];
+                        handler.SendFile(pfadUndDateiname);
                     }
                     //Send(handler, content);
                     //state.buffer = new byte[1024];
