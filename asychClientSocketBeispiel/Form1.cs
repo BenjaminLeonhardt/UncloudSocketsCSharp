@@ -333,23 +333,35 @@ namespace asychClientSocketBeispiel {
                 // There might be more data, so store the data received so far.  
                 string dateiName = "";
                 string dateiGroesse = "";
-               
-                Invoke((MethodInvoker)delegate {
-                    dateiName = filesView2.SelectedItems[0].SubItems[0].Text;
-                    dateiGroesse = filesView2.SelectedItems[0].SubItems[1].Text;
-                });
-                string freigabeOrdner = pfadTextBox.Text;
+                try {
+                    Invoke((MethodInvoker)delegate {
+                        dateiName = filesView2.SelectedItems[0].SubItems[0].Text;
+                        dateiGroesse = filesView2.SelectedItems[0].SubItems[1].Text;
+                    });
+                    string freigabeOrdner = pfadTextBox.Text;
+                    long dateigroesseLong = Convert.ToInt64(dateiGroesse);
+                    if (dateigroesseLong > 1024) {
+                        DirectoryInfo directoryInfo = new DirectoryInfo(freigabeOrdner);
+                        FileInfo[] fileInfoArray = directoryInfo.GetFiles();
+                        foreach (FileInfo item in fileInfoArray) {
+                            if (item.Name.Equals(dateiName)) {
 
-                
-                DirectoryInfo directoryInfo = new DirectoryInfo(freigabeOrdner);
-                FileInfo[] fileInfoArray = directoryInfo.GetFiles();
-                foreach (FileInfo item in fileInfoArray) {
-                    if (item.Name.Equals(dateiName)) {
-
-                        long fortschrittInProzent = (item.Length / Convert.ToInt64(dateiGroesse)) * 100;
+                                long fortschrittInProzent = (((item.Length + bytesRead) * 100) / dateigroesseLong);
+                                Invoke((MethodInvoker)delegate {
+                                    ListViewItem.ListViewSubItem newItem = new ListViewItem.ListViewSubItem();
+                                    newItem.Text = Convert.ToString(fortschrittInProzent) + " %";
+                                    if (filesView2.SelectedItems[0].SubItems.Count == 2) {
+                                        filesView2.SelectedItems[0].SubItems.Add(newItem);
+                                    } else if (filesView2.SelectedItems[0].SubItems.Count == 3) {
+                                        filesView2.SelectedItems[0].SubItems[2] = newItem;
+                                    }
+                                });
+                            }
+                        }
+                    } else {
                         Invoke((MethodInvoker)delegate {
                             ListViewItem.ListViewSubItem newItem = new ListViewItem.ListViewSubItem();
-                            newItem.Text = Convert.ToString(fortschrittInProzent)+" %";
+                            newItem.Text = "100 %";
                             if (filesView2.SelectedItems[0].SubItems.Count == 2) {
                                 filesView2.SelectedItems[0].SubItems.Add(newItem);
                             } else if (filesView2.SelectedItems[0].SubItems.Count == 3) {
@@ -357,13 +369,17 @@ namespace asychClientSocketBeispiel {
                             }
                         });
                     }
-                }
+                    
 
-                semaphoreDateiSpeichern.WaitOne(10);
-                FileStream fileStream = File.Open(freigabeOrdner + "\\" + dateiName, FileMode.Append, FileAccess.Write, FileShare.None);
-                fileStream.Write(state.buffer, 0, bytesRead);
-                fileStream.Close();
-                semaphoreDateiSpeichern.Release();
+                    semaphoreDateiSpeichern.WaitOne(10);
+                    FileStream fileStream = File.Open(freigabeOrdner + "\\" + dateiName, FileMode.Append, FileAccess.Write, FileShare.None);
+                    fileStream.Write(state.buffer, 0, bytesRead);
+                    fileStream.Close();
+                    semaphoreDateiSpeichern.Release();
+                }catch(Exception ex) {
+                    Console.WriteLine(ex.ToString());
+                }
+                
 
                 //Console.WriteLine(freigabeOrdner + "\\" + dateiName +" gespeichert");
                 string response = state.sb.ToString();
