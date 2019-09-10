@@ -184,8 +184,14 @@ namespace asychClientSocketBeispiel {
                         Send(handler, answer);
                     } else if (aktion == 3) {
                         string[] mesageItems = contentOhneHeaderUndTailer.Split(':');
-                        string pfadUndDateiname = formStatic.pfadTextBox.Text + "\\" + mesageItems[3];
-                        handler.SendFile(pfadUndDateiname);
+                        if (mesageItems[3].Contains("..\\"))
+                        {
+                            return;
+                        }
+                        
+                        //string pfadUndDateiname = formStatic.pfadTextBox.Text + "\\" + mesageItems[3];
+                        //handler.SendFile(pfadUndDateiname);
+                        SendDatei(handler, mesageItems[3]);
                     }
                     //Send(handler, content);
                     //state.buffer = new byte[1024];
@@ -205,6 +211,26 @@ namespace asychClientSocketBeispiel {
         private static void Send(Socket handler, String data) {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.UTF8.GetBytes(data);
+
+            // Begin sending the data to the remote device.  
+            handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
+        }
+
+
+        private static void SendDatei(Socket handler, String dateiname){
+            FileStream fileStream = File.Open(formStatic.pfadTextBox.Text + "\\" + dateiname, FileMode.Open);
+            DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
+            FileInfo[] fileInfoArray = directoryInfo.GetFiles();
+            byte[] byteData=new byte[1024];
+            foreach (FileInfo item in fileInfoArray) {
+                if (item.Name.Equals(dateiname)){
+                    byteData = new byte[item.Length];
+                }
+            }
+            fileStream.Read(byteData, 0, byteData.Length);
+
+            // Convert the string data to byte data using ASCII encoding.  
+           
 
             // Begin sending the data to the remote device.  
             handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
