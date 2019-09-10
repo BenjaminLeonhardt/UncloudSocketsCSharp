@@ -24,6 +24,8 @@ namespace asychClientSocketBeispiel {
         public static ManualResetEvent receiveDone = new ManualResetEvent(false);
         public static string IpOfSelectedPeer = "";
 
+        public static Semaphore semaphoreDateiSpeichern = new Semaphore(1,1);
+
         public static string UncloudConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Uncloud\\";
         public static string UncloudConfigFilename = "config.ini";
         public Form1() {
@@ -202,27 +204,6 @@ namespace asychClientSocketBeispiel {
                         aktion = Int32.Parse("" + responseOhneHeaderUndTailer[0]);
                     }
                     if (aktion == 2) {
-                        //string pfad = pfadTextBox.Text;
-                        //string[] filePaths = Directory.GetFiles(pfadTextBox.Text);
-                        //string responseString = "{beg";
-                        //foreach (string str in filePaths) {
-                        //    responseString += filePaths;
-                        //    responseString += "♥";
-                        //}
-                        //responseString += "}end";
-                        //Send(client, responseString);
-                        //List<string> dateien = new List<string>();
-                        //string tmp = "";
-                        //for(int i=2;i<= responseOhneHeaderUndTailer.Length; i++) {
-                        //    if (responseOhneHeaderUndTailer[i]=='♥') {
-                        //        dateien.Add(tmp);
-                        //        tmp = "";
-                        //        i++; 
-                        //    }
-                        //    if(i< responseOhneHeaderUndTailer.Length) {
-                        //        tmp += responseOhneHeaderUndTailer[i];
-                        //    }   
-                        //}
                         string[] ohneAktion = responseOhneHeaderUndTailer.Split('☻');
                         string[] dateienMitGroesse = ohneAktion[1].Split('|');
 
@@ -328,14 +309,9 @@ namespace asychClientSocketBeispiel {
 
             StateObject stateFile = new StateObject();
             stateFile.workSocket = client;
-            try {
-                //client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
-                //Thread.Sleep(100);
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
 
-            } catch {
-
-            }
+            Thread.Sleep(100);
+            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
 
             Thread.Sleep(100);
             //sendDone.WaitOne();
@@ -344,19 +320,52 @@ namespace asychClientSocketBeispiel {
         }
 
         private void ReceiveCallbackFile(IAsyncResult ar) {
-          
+
             // Retrieve the state object and the client socket   
             // from the asynchronous state object.  
             StateObject state = (StateObject)ar.AsyncState;
             Socket client = state.workSocket;
-            state.sb = new StringBuilder();
+            
             // Read data from the remote device.  
             int bytesRead = client.EndReceive(ar);
 
             if (bytesRead > 0) {
                 // There might be more data, so store the data received so far.  
-                state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
-                Console.WriteLine("Empfangen: " + state.sb.ToString());
+                string dateiName = "";
+                string dateiGroesse = "";
+               
+                Invoke((MethodInvoker)delegate {
+                    dateiName = filesView2.SelectedItems[0].SubItems[0].Text;
+                    dateiGroesse = filesView2.SelectedItems[0].SubItems[1].Text;
+                });
+                string freigabeOrdner = pfadTextBox.Text;
+
+                
+                DirectoryInfo directoryInfo = new DirectoryInfo(freigabeOrdner);
+                FileInfo[] fileInfoArray = directoryInfo.GetFiles();
+                foreach (FileInfo item in fileInfoArray) {
+                    if (item.Name.Equals(dateiName)) {
+
+                        long fortschrittInProzent = (item.Length / Convert.ToInt64(dateiGroesse)) * 100;
+                        Invoke((MethodInvoker)delegate {
+                            ListViewItem.ListViewSubItem newItem = new ListViewItem.ListViewSubItem();
+                            newItem.Text = Convert.ToString(fortschrittInProzent)+" %";
+                            if (filesView2.SelectedItems[0].SubItems.Count == 2) {
+                                filesView2.SelectedItems[0].SubItems.Add(newItem);
+                            } else if (filesView2.SelectedItems[0].SubItems.Count == 3) {
+                                filesView2.SelectedItems[0].SubItems[2] = newItem;
+                            }
+                        });
+                    }
+                }
+
+                semaphoreDateiSpeichern.WaitOne(10);
+                FileStream fileStream = File.Open(freigabeOrdner + "\\" + dateiName, FileMode.Append, FileAccess.Write, FileShare.None);
+                fileStream.Write(state.buffer, 0, bytesRead);
+                fileStream.Close();
+                semaphoreDateiSpeichern.Release();
+
+                //Console.WriteLine(freigabeOrdner + "\\" + dateiName +" gespeichert");
                 string response = state.sb.ToString();
 
             }
