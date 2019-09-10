@@ -160,16 +160,25 @@ namespace asychClientSocketBeispiel {
                     aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
                     if (aktion == 2) {
 
-                        IEnumerable<string> filePaths = Directory.EnumerateFiles(formStatic.pfadTextBox.Text);
-                        List<string> dateienOhnePfad = new List<string>();
-                        foreach (string str in filePaths) {
-                            dateienOhnePfad.Add(str.Substring(formStatic.pfadTextBox.Text.Length+1));
-                        }
+
+                        DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
+                        FileInfo[] fileInfoArray = directoryInfo.GetFiles();
                         string answer = "beg{2☻";
-                        foreach (string str in dateienOhnePfad) {
-                            answer += str + "♥";
+                        foreach (FileInfo item in fileInfoArray) {
+                            answer += item.Name +";"+item.Length;
                         }
                         answer += "}end";
+
+                        //IEnumerable<string> filePaths = Directory.EnumerateFiles(formStatic.pfadTextBox.Text);
+                        //List<string> dateienOhnePfad = new List<string>();
+                        //foreach (string str in filePaths) {
+                        //    dateienOhnePfad.Add(str.Substring(formStatic.pfadTextBox.Text.Length+1));
+                        //}
+                        //string answer = "beg{2☻";
+                        //foreach (string str in dateienOhnePfad) {
+                        //    answer += str + "♥";
+                        //}
+                        //answer += "}end";
                         Console.WriteLine(answer);
 
                         Send(handler, answer);
