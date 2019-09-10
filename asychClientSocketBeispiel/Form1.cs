@@ -230,10 +230,13 @@ namespace asychClientSocketBeispiel {
                             filesView2.Items.Clear();
                             foreach (string item in dateienMitGroesse) {
                                 string[] dateiUndGroesse = item.Split(';');
-                                ListViewItem newItem = new ListViewItem(Convert.ToString(dateiUndGroesse[0]));
-                                newItem.SubItems.Add(dateiUndGroesse[1]);
+                                if (dateiUndGroesse.Length == 2) {
+                                    ListViewItem newItem = new ListViewItem(Convert.ToString(dateiUndGroesse[0]));
+                                    newItem.SubItems.Add(dateiUndGroesse[1]);
 
-                                filesView2.Items.Add(newItem);
+                                    filesView2.Items.Add(newItem);
+                                }
+                                
                             }
                         });
                     }else if(aktion==3) {
