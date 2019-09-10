@@ -228,9 +228,9 @@ namespace asychClientSocketBeispiel {
                 }
             }
             fileStream.Read(byteData, 0, byteData.Length);
-
+            fileStream.Close();
             // Convert the string data to byte data using ASCII encoding.  
-           
+
 
             // Begin sending the data to the remote device.  
             handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
