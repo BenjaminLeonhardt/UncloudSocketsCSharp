@@ -324,8 +324,9 @@ namespace asychClientSocketBeispiel {
             StateObject stateFile = new StateObject();
             stateFile.workSocket = client;
             try {
-               client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
-               client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+                //client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
+                //Thread.Sleep(100);
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
 
             } catch {
 
