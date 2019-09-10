@@ -331,7 +331,7 @@ namespace asychClientSocketBeispiel {
             try {
                 //client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
                 //Thread.Sleep(100);
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
 
             } catch {
 
@@ -341,6 +341,33 @@ namespace asychClientSocketBeispiel {
             //sendDone.WaitOne();
             sendThreadFile(client,(string)filename);
 
+        }
+
+        private void ReceiveCallbackFile(IAsyncResult ar) {
+          
+            // Retrieve the state object and the client socket   
+            // from the asynchronous state object.  
+            StateObject state = (StateObject)ar.AsyncState;
+            Socket client = state.workSocket;
+            state.sb = new StringBuilder();
+            // Read data from the remote device.  
+            int bytesRead = client.EndReceive(ar);
+
+            if (bytesRead > 0) {
+                // There might be more data, so store the data received so far.  
+                state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+                Console.WriteLine("Empfangen: " + state.sb.ToString());
+                string response = state.sb.ToString();
+
+            }
+            try {
+            //client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
+            //Thread.Sleep(100);
+            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
+
+            } catch {
+
+            }
         }
 
         private static void AsynchronousFileSendCallback(IAsyncResult ar) {
