@@ -211,25 +211,27 @@ namespace asychClientSocketBeispiel {
                         //}
                         //responseString += "}end";
                         //Send(client, responseString);
-                        List<string> dateien = new List<string>();
-                        string tmp = "";
-                        for(int i=2;i<= responseOhneHeaderUndTailer.Length; i++) {
-                            if (responseOhneHeaderUndTailer[i]=='♥') {
-                                dateien.Add(tmp);
-                                tmp = "";
-                                i++; 
-                            }
-                            if(i< responseOhneHeaderUndTailer.Length) {
-                                tmp += responseOhneHeaderUndTailer[i];
-                            }   
-                        }
-
+                        //List<string> dateien = new List<string>();
+                        //string tmp = "";
+                        //for(int i=2;i<= responseOhneHeaderUndTailer.Length; i++) {
+                        //    if (responseOhneHeaderUndTailer[i]=='♥') {
+                        //        dateien.Add(tmp);
+                        //        tmp = "";
+                        //        i++; 
+                        //    }
+                        //    if(i< responseOhneHeaderUndTailer.Length) {
+                        //        tmp += responseOhneHeaderUndTailer[i];
+                        //    }   
+                        //}
+                        string[] ohneAktion = responseOhneHeaderUndTailer.Split('☻');
+                        string[] dateienMitGroesse = ohneAktion[1].Split('|');
 
                         Invoke((MethodInvoker)delegate {
                             filesView2.Items.Clear();
-                            foreach (string item in dateien) {
-                                ListViewItem newItem = new ListViewItem(Convert.ToString(item));
-                                
+                            foreach (string item in dateienMitGroesse) {
+                                string[] dateiUndGroesse = item.Split(';');
+                                ListViewItem newItem = new ListViewItem(Convert.ToString(dateiUndGroesse[0]));
+                                newItem.SubItems.Add(dateiUndGroesse[1]);
 
                                 filesView2.Items.Add(newItem);
                             }
