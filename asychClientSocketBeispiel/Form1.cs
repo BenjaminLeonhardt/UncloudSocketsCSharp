@@ -440,13 +440,21 @@ namespace asychClientSocketBeispiel {
         }
 
         private void chatButton_Click(object sender, EventArgs e) {
-            if (IpOfSelectedPeer.Equals("")) {
+            string NameDesAusgewaehltenPeers = "";
+            try{
+                NameDesAusgewaehltenPeers = peersListe.SelectedItems[0].SubItems[1].Text;
+            }
+            catch (Exception ex){
+                Console.WriteLine(ex.ToString());
+            }
+            
+            if (IpOfSelectedPeer.Equals("")|| NameDesAusgewaehltenPeers.Equals("")) {
                MessageBox.Show("Es wurde kein Peer ausgewählt...", "Achtung", MessageBoxButtons.OK);
                return;
             }
 
             
-            string NameDesAusgewaehltenPeers = peersListe.SelectedItems[0].SubItems[1].Text;
+            
             bool gefunden = false;
             StateObject tmpObjekt = null;
             foreach (StateObject item in chatObjekte) {

@@ -227,7 +227,7 @@ namespace asychClientSocketBeispiel {
                 FileStream fileStream = File.Open(formStatic.pfadTextBox.Text + "\\" + dateiname, FileMode.Open);
                 DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
                 FileInfo[] fileInfoArray = directoryInfo.GetFiles();
-                byte[] byteData = new byte[1024];
+                byte[] byteData = new byte[65535];
                 foreach (FileInfo item in fileInfoArray)
                 {
                     if (item.Name.Equals(dateiname))
