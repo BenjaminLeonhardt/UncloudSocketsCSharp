@@ -237,6 +237,7 @@ namespace asychClientSocketBeispiel {
         public static void chatThread(Object peerName) {
             ChatForm chatform = new ChatForm();
             chatform.Text = "Chat mit " + (string)peerName;
+            chatform.Show();
             StateObject tmpStateObject = null;
             string name = (string)peerName;
             foreach (StateObject item in Form1.chatObjekte) {
@@ -245,7 +246,7 @@ namespace asychClientSocketBeispiel {
                     tmpStateObject = item;
                 }
             }
-            chatform.Show();
+            
             tmpStateObject.workSocket.BeginReceive(tmpStateObject.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), tmpStateObject);
         }
 

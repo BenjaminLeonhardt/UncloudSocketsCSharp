@@ -23,7 +23,7 @@ namespace asychClientSocketBeispiel {
                 }
             }
             AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{5☻" + chatEingabeFeld.Text+"}end");
-            chatText.Text = chatText.Text + "\n" + chatEingabeFeld.Text;
+            chatText.Text = chatText.Text + Environment.NewLine + chatEingabeFeld.Text;
             chatEingabeFeld.Text = "";
         }
     }
