@@ -78,7 +78,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox chatText;
+        public System.Windows.Forms.TextBox chatText;
         private System.Windows.Forms.TextBox chatEingabeFeld;
         private System.Windows.Forms.Button chatSendeButton;
     }

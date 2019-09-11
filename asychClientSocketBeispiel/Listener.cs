@@ -162,14 +162,13 @@ namespace asychClientSocketBeispiel {
                     int aktion = -1;
 
                     aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
-                    if (aktion == 2){
+                    if (aktion == 2) {
 
 
                         DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
                         FileInfo[] fileInfoArray = directoryInfo.GetFiles();
                         string answer = "beg{2☻";
-                        foreach (FileInfo item in fileInfoArray)
-                        {
+                        foreach (FileInfo item in fileInfoArray) {
                             answer += item.Name + ";" + item.Length + "|";
                         }
                         answer += "}end";
@@ -177,17 +176,15 @@ namespace asychClientSocketBeispiel {
                         Console.WriteLine(answer);
 
                         Send(handler, answer);
-                    }
-                    else if (aktion == 3) {
+                    } else if (aktion == 3) {
                         string[] mesageItems = contentOhneHeaderUndTailer.Split(':');
-                        if (mesageItems[3].Contains("..\\")){
+                        if (mesageItems[3].Contains("..\\")) {
                             return;
                         }
 
                         SendDatei(handler, mesageItems[3]);
-                    }
-                    else if (aktion == 4){
-                        string [] contentArray = contentOhneHeaderUndTailer.Split(':');
+                    } else if (aktion == 4) {
+                        string[] contentArray = contentOhneHeaderUndTailer.Split(':');
                         string name = contentArray[1];
                         string ip = contentArray[2];
 
@@ -206,16 +203,31 @@ namespace asychClientSocketBeispiel {
                                 ParameterizedThreadStart pts = new ParameterizedThreadStart(chatThread);
                                 Thread sendThreadObj = new Thread(pts);
                                 sendThreadObj.Start(name);
-                            } catch(Exception ex) {
+                            } catch (Exception ex) {
                                 Console.WriteLine(ex.ToString());
                             }
-                            
+
 
                         } else {
-                            
-                        }                        
+                            tmpObjekt = state;
+                            tmpObjekt.peerName = name;
+                            Form1.chatObjekte.Add(tmpObjekt);
+
+                            try {
+
+                                ParameterizedThreadStart pts = new ParameterizedThreadStart(chatThread);
+                                Thread sendThreadObj = new Thread(pts);
+                                sendThreadObj.Start(name);
+                            } catch (Exception ex) {
+                                Console.WriteLine(ex.ToString());
+                            }
+                        }
+                    } else if (aktion == 5) {
+                        state.chatForm.Invoke((MethodInvoker)delegate {
+                            state.chatForm.chatText.Text = state.chatForm.chatText.Text + "\n" + contentOhneHeaderUndTailer;
+                        });
                     }
-                } else {
+                    } else {
                     // Not all data received. Get more.  
                     handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
                 }
@@ -225,8 +237,16 @@ namespace asychClientSocketBeispiel {
         public static void chatThread(Object peerName) {
             ChatForm chatform = new ChatForm();
             chatform.Text = "Chat mit " + (string)peerName;
+            StateObject tmpStateObject = null;
+            string name = (string)peerName;
+            foreach (StateObject item in Form1.chatObjekte) {
+                if (name.Contains(item.peerName)) {                   
+                    item.chatForm = chatform;
+                    tmpStateObject = item;
+                }
+            }
             chatform.Show();
-
+            tmpStateObject.workSocket.BeginReceive(tmpStateObject.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), tmpStateObject);
         }
 
         public static void Send(Socket handler, String data) {

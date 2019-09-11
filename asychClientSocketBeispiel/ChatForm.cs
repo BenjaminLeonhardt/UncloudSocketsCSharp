@@ -19,9 +19,10 @@ namespace asychClientSocketBeispiel {
             foreach (StateObject item in Form1.chatObjekte) {
                 if (this.Text.Contains(item.peerName)) {
                     chatPeer = item;
+                    item.chatForm = this;
                 }
             }
-            AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{4☻" + chatEingabeFeld.Text+"}end");
+            AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{5☻" + chatEingabeFeld.Text+"}end");
             chatText.Text = chatText.Text + "\n" + chatEingabeFeld.Text;
             chatEingabeFeld.Text = "";
         }
