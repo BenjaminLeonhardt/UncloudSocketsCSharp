@@ -29,6 +29,8 @@ namespace asychClientSocketBeispiel {
         public byte[] buffer = new byte[BufferSize];
         // Received data string.  
         public StringBuilder sb = new StringBuilder();
+        public string dateiName = "";
+        public long dateiGroesse = 0;
     }
 
     public class Peer {

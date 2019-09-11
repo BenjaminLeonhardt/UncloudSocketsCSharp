@@ -49,6 +49,7 @@ namespace asychClientSocketBeispiel {
                 stream.Close();
             }
             peersListe.FullRowSelect = true;
+            filesView2.FullRowSelect = true;
             try {
                 ParameterizedThreadStart pts = new ParameterizedThreadStart(AsynchronousSocketListener.StartListening);
                 Thread sendThreadObj = new Thread(pts);
@@ -306,9 +307,11 @@ namespace asychClientSocketBeispiel {
 
             StateObject state = new StateObject();
             state.workSocket = client;
-
-            StateObject stateFile = new StateObject();
-            stateFile.workSocket = client;
+            state.dateiName = (string)filename;
+            Invoke((MethodInvoker)delegate {
+                state.dateiGroesse = Convert.ToInt64(filesView2.SelectedItems[0].SubItems[1].Text);
+            });
+            
 
             Thread.Sleep(100);
             client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
@@ -331,16 +334,16 @@ namespace asychClientSocketBeispiel {
 
             if (bytesRead > 0) {
                 // There might be more data, so store the data received so far.  
-                string dateiName = "";
-                string dateiGroesse = "";
+                string dateiName = state.dateiName;
+                //long dateiGroesse = state.dateiGroesse;
                 try {
-                    Invoke((MethodInvoker)delegate {
-                        dateiName = filesView2.SelectedItems[0].SubItems[0].Text;
-                        dateiGroesse = filesView2.SelectedItems[0].SubItems[1].Text;
-                    });
+                    //Invoke((MethodInvoker)delegate {
+                    //    dateiName = filesView2.SelectedItems[0].SubItems[0].Text;
+                    //    dateiGroesse = filesView2.SelectedItems[0].SubItems[1].Text;
+                    //});
                     string freigabeOrdner = pfadTextBox.Text;
-                    long dateigroesseLong = Convert.ToInt64(dateiGroesse);
-                    if (dateigroesseLong > 1024) {
+                    long dateigroesseLong = state.dateiGroesse;
+                    if (dateigroesseLong > 65535) {
                         DirectoryInfo directoryInfo = new DirectoryInfo(freigabeOrdner);
                         FileInfo[] fileInfoArray = directoryInfo.GetFiles();
                         foreach (FileInfo item in fileInfoArray) {
@@ -350,11 +353,16 @@ namespace asychClientSocketBeispiel {
                                 Invoke((MethodInvoker)delegate {
                                     ListViewItem.ListViewSubItem newItem = new ListViewItem.ListViewSubItem();
                                     newItem.Text = Convert.ToString(fortschrittInProzent) + " %";
-                                    if (filesView2.SelectedItems[0].SubItems.Count == 2) {
-                                        filesView2.SelectedItems[0].SubItems.Add(newItem);
-                                    } else if (filesView2.SelectedItems[0].SubItems.Count == 3) {
-                                        filesView2.SelectedItems[0].SubItems[2] = newItem;
+                                    foreach (ListViewItem listItem in filesView2.Items) {
+                                        if (listItem.Text.Equals(dateiName)) {
+                                            if (listItem.SubItems.Count == 2) {
+                                                listItem.SubItems.Add(newItem);
+                                            } else if (listItem.SubItems.Count == 3) {
+                                                listItem.SubItems[2] = newItem;
+                                            }
+                                        }
                                     }
+                                    
                                 });
                             }
                         }
