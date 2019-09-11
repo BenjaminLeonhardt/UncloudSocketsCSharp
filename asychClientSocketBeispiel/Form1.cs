@@ -24,7 +24,7 @@ namespace asychClientSocketBeispiel {
         public static ManualResetEvent receiveDone = new ManualResetEvent(false);
         public static string IpOfSelectedPeer = "";
 
-        public static Semaphore semaphoreDateiSpeichern = new Semaphore(1,1);
+        public static Semaphore semaphoreDateiSpeichern = new Semaphore(1, 1);
 
         public static string UncloudConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Uncloud\\";
         public static string UncloudConfigFilename = "config.ini";
@@ -57,7 +57,7 @@ namespace asychClientSocketBeispiel {
             } catch {
 
             }
-           
+
         }
 
         private void button1_Click(object sender, EventArgs e) {
@@ -139,11 +139,12 @@ namespace asychClientSocketBeispiel {
 
             StateObject state = new StateObject();
             state.workSocket = client;
+            Thread.Sleep(100);
             try {
                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
 
-            } catch {
-
+            } catch (Exception ex) {
+                Console.WriteLine(ex.ToString());
             }
 
             Thread.Sleep(100);
@@ -188,7 +189,7 @@ namespace asychClientSocketBeispiel {
                 if (bytesRead > 0) {
                     // There might be more data, so store the data received so far.  
                     state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
-                    Console.WriteLine("Empfangen: " + state.sb.ToString());
+                    //Console.WriteLine("Empfangen: " + state.sb.ToString());
                     string response = state.sb.ToString();
 
                     int begin = response.IndexOf("beg{");
@@ -218,10 +219,10 @@ namespace asychClientSocketBeispiel {
 
                                     filesView2.Items.Add(newItem);
                                 }
-                                
+
                             }
                         });
-                    }else if(aktion==3) {
+                    } else if (aktion == 3) {
                         string[] mesageItems = responseOhneHeaderUndTailer.Split(':');
                         client.SendFile(mesageItems[3]);
                     }
@@ -235,9 +236,12 @@ namespace asychClientSocketBeispiel {
                         Application.Exit();
                     }
                 }
+                client.Disconnect(false);
+                client.Close();
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
             }
+
         }
 
         void sendThread(Object client) {
@@ -252,13 +256,13 @@ namespace asychClientSocketBeispiel {
             // Send test data to the remote device.  
             string text = "beg{" + "2" + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":♥" + "}end";
             Send((Socket)client, text);
-            
+
         }
 
         private static void Send(Socket client, String data) {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.UTF8.GetBytes(data);
-            Console.WriteLine("sende zu " + client.RemoteEndPoint.ToString() + " " + data);
+            //Console.WriteLine("sende zu " + client.RemoteEndPoint.ToString() + " " + data);
             // Begin sending the data to the remote device.  
             if (Form1.run) {
                 client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
@@ -284,7 +288,14 @@ namespace asychClientSocketBeispiel {
         private void filesView2_SelectedIndexChanged(object sender, EventArgs e) {
             try {
                 string selectedItem = filesView2.SelectedItems[0].SubItems[0].Text;
-
+                if (File.Exists(pfadTextBox.Text + "\\" + selectedItem)) {
+                    DialogResult result = MessageBox.Show("Datei vorhanden. Überschreiben?", "Achtung", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.No) {
+                        return;
+                    } else {
+                        File.Delete(pfadTextBox.Text + "\\" + selectedItem);
+                    }
+                }
                 try {
                     ParameterizedThreadStart pts = new ParameterizedThreadStart(getThisFileThread);
                     Thread sendThreadObj = new Thread(pts);
@@ -311,14 +322,14 @@ namespace asychClientSocketBeispiel {
             Invoke((MethodInvoker)delegate {
                 state.dateiGroesse = Convert.ToInt64(filesView2.SelectedItems[0].SubItems[1].Text);
             });
-            
+
 
             Thread.Sleep(100);
             client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
 
             Thread.Sleep(100);
             //sendDone.WaitOne();
-            sendThreadFile(client,(string)filename);
+            sendThreadFile(client, (string)filename);
 
         }
 
@@ -328,7 +339,7 @@ namespace asychClientSocketBeispiel {
             // from the asynchronous state object.  
             StateObject state = (StateObject)ar.AsyncState;
             Socket client = state.workSocket;
-            
+
             // Read data from the remote device.  
             int bytesRead = client.EndReceive(ar);
 
@@ -362,7 +373,7 @@ namespace asychClientSocketBeispiel {
                                             }
                                         }
                                     }
-                                    
+
                                 });
                             }
                         }
@@ -377,26 +388,26 @@ namespace asychClientSocketBeispiel {
                             }
                         });
                     }
-                    
+
 
                     semaphoreDateiSpeichern.WaitOne(10);
                     FileStream fileStream = File.Open(freigabeOrdner + "\\" + dateiName, FileMode.Append, FileAccess.Write, FileShare.None);
                     fileStream.Write(state.buffer, 0, bytesRead);
                     fileStream.Close();
                     semaphoreDateiSpeichern.Release();
-                }catch(Exception ex) {
+                } catch (Exception ex) {
                     Console.WriteLine(ex.ToString());
                 }
-                
+
 
                 //Console.WriteLine(freigabeOrdner + "\\" + dateiName +" gespeichert");
                 string response = state.sb.ToString();
 
             }
             try {
-            //client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
-            //Thread.Sleep(100);
-            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
+                //client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
+                //Thread.Sleep(100);
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
 
             } catch {
 
@@ -413,7 +424,7 @@ namespace asychClientSocketBeispiel {
         }
 
 
-        void sendThreadFile(Object client,string filename) {
+        void sendThreadFile(Object client, string filename) {
 
             string HostName = Dns.GetHostName();
 
@@ -423,9 +434,87 @@ namespace asychClientSocketBeispiel {
             IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
 
             // Send test data to the remote device.  
-            string text = "beg{" + "3" + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":"+ filename + ":♥" + "}end";
+            string text = "beg{" + "3" + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":" + filename + ":♥" + "}end";
             Send((Socket)client, text);
 
+        }
+
+        private void chatButton_Click(object sender, EventArgs e) {
+            ChatForm chatform = new ChatForm();
+            chatform.Show();
+
+
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(IpOfSelectedPeer), peersPort);
+            Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+
+            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+            connectDone.WaitOne();
+
+            StateObject state = new StateObject();
+            state.workSocket = client;
+            state.chatForm = chatform;
+            state.peerName = peersListe.SelectedItems[0].SubItems[0].Text;
+
+            Thread.Sleep(100);
+            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackChat), state);
+
+            Thread.Sleep(100);
+            //sendDone.WaitOne();
+            sendThreadChat(client);
+
+        }
+
+        void sendThreadChat(Object client) {
+
+            string HostName = Dns.GetHostName();
+
+            IPHostEntry hostInfo = Dns.GetHostEntry(HostName);
+            //IpAdresse = hostInfo.AddressList[hostInfo.AddressList.Length - 1].ToString();
+
+            IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
+
+            // Send test data to the remote device.  
+            string text = "beg{" + "4" + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":♥" + "}end";
+            Send((Socket)client, text);
+
+        }
+
+        private void ReceiveCallbackChat(IAsyncResult ar) {
+            try {
+                sendDone.Set();
+                // Retrieve the state object and the client socket   
+                // from the asynchronous state object.  
+                StateObject state = (StateObject)ar.AsyncState;
+                Socket client = state.workSocket;
+                state.sb = new StringBuilder();
+                // Read data from the remote device.  
+                int bytesRead = client.EndReceive(ar);
+
+                if (bytesRead > 0) {
+                    // There might be more data, so store the data received so far.  
+                    state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+                    //Console.WriteLine("Empfangen: " + state.sb.ToString());
+                    string response = state.sb.ToString();
+
+                    int begin = response.IndexOf("beg{");
+                    int ende = response.IndexOf("}end");
+
+                    string responseOhneHeaderUndTailer = "";
+                    for (int j = begin + 4; j < ende; j++) {
+                        responseOhneHeaderUndTailer += response[j];
+                    }
+                    int aktion = -1;
+
+
+                    if (responseOhneHeaderUndTailer.Length > 1) {
+                        aktion = Int32.Parse("" + responseOhneHeaderUndTailer[0]);
+                    }
+                    if (aktion == 4) {
+                    }
+                }
+            }catch(Exception ex) {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

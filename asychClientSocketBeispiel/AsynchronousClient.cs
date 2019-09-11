@@ -170,7 +170,7 @@ namespace asychClientSocketBeispiel {
                 if (bytesRead > 0) {
                     // There might be more data, so store the data received so far.  
                     state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
-                    Console.WriteLine("Empfangen: "+state.sb.ToString());
+                    //Console.WriteLine("Empfangen: "+state.sb.ToString());
                     string response = state.sb.ToString();
 
                     int begin = response.IndexOf("beg{");
@@ -338,7 +338,7 @@ namespace asychClientSocketBeispiel {
 
                 // Complete sending the data to the remote device.  
                 int bytesSent = client.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+                //Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
                 // Signal that all bytes have been sent.  
                 sendDone.Set();
