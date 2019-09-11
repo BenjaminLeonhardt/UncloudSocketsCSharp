@@ -162,14 +162,16 @@ namespace asychClientSocketBeispiel {
                     int aktion = -1;
 
                     aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
-                    if (aktion == 2) {
+                    if (aktion == 2)
+                    {
 
 
                         DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
                         FileInfo[] fileInfoArray = directoryInfo.GetFiles();
                         string answer = "beg{2☻";
-                        foreach (FileInfo item in fileInfoArray) {
-                            answer += item.Name +";"+item.Length+"|";
+                        foreach (FileInfo item in fileInfoArray)
+                        {
+                            answer += item.Name + ";" + item.Length + "|";
                         }
                         answer += "}end";
 
@@ -186,26 +188,31 @@ namespace asychClientSocketBeispiel {
                         Console.WriteLine(answer);
 
                         Send(handler, answer);
-                    } else if (aktion == 3) {
+                    }
+                    else if (aktion == 3)
+                    {
                         string[] mesageItems = contentOhneHeaderUndTailer.Split(':');
                         if (mesageItems[3].Contains("..\\"))
                         {
                             return;
                         }
-                        
+
                         //string pfadUndDateiname = formStatic.pfadTextBox.Text + "\\" + mesageItems[3];
                         //handler.SendFile(pfadUndDateiname);
                         SendDatei(handler, mesageItems[3]);
                     }
-                    //Send(handler, content);
-                    //state.buffer = new byte[1024];
-                    //try {
-                    //    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+                    else if (aktion == 4){
 
-                    //} catch (Exception ex) {
-                    //    Console.WriteLine(ex.Message);
-                    //}
-                } else {
+                    }
+                        //Send(handler, content);
+                        //state.buffer = new byte[1024];
+                        //try {
+                        //    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+
+                        //} catch (Exception ex) {
+                        //    Console.WriteLine(ex.Message);
+                        //}
+                    } else {
                     // Not all data received. Get more.  
                     handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
                 }
