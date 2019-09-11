@@ -162,8 +162,7 @@ namespace asychClientSocketBeispiel {
                     int aktion = -1;
 
                     aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
-                    if (aktion == 2)
-                    {
+                    if (aktion == 2){
 
 
                         DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
@@ -175,44 +174,43 @@ namespace asychClientSocketBeispiel {
                         }
                         answer += "}end";
 
-                        //IEnumerable<string> filePaths = Directory.EnumerateFiles(formStatic.pfadTextBox.Text);
-                        //List<string> dateienOhnePfad = new List<string>();
-                        //foreach (string str in filePaths) {
-                        //    dateienOhnePfad.Add(str.Substring(formStatic.pfadTextBox.Text.Length+1));
-                        //}
-                        //string answer = "beg{2☻";
-                        //foreach (string str in dateienOhnePfad) {
-                        //    answer += str + "♥";
-                        //}
-                        //answer += "}end";
                         Console.WriteLine(answer);
 
                         Send(handler, answer);
                     }
-                    else if (aktion == 3)
-                    {
+                    else if (aktion == 3) {
                         string[] mesageItems = contentOhneHeaderUndTailer.Split(':');
-                        if (mesageItems[3].Contains("..\\"))
-                        {
+                        if (mesageItems[3].Contains("..\\")){
                             return;
                         }
 
-                        //string pfadUndDateiname = formStatic.pfadTextBox.Text + "\\" + mesageItems[3];
-                        //handler.SendFile(pfadUndDateiname);
                         SendDatei(handler, mesageItems[3]);
                     }
                     else if (aktion == 4){
+                        string [] contentArray = contentOhneHeaderUndTailer.Split(':');
+                        string name = contentArray[1];
+                        string ip = contentArray[2];
 
+                        bool gefunden = false;
+                        StateObject tmpObjekt = null;
+                        foreach (StateObject item in Form1.chatObjekte) {
+                            if (item.peerName.Equals(name)) {
+                                tmpObjekt = item;
+                                gefunden = true;
+                            }
+                        }
+
+                        if (gefunden) {
+                            ChatForm chatform = new ChatForm();
+                            chatform.Text = "Chat mit " + name;
+                            chatform.Show();
+                        } else {
+                            ChatForm chatform = new ChatForm();
+                            chatform.Text = "Chat mit " + name;
+                            chatform.Show();
+                        }                        
                     }
-                        //Send(handler, content);
-                        //state.buffer = new byte[1024];
-                        //try {
-                        //    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
-
-                        //} catch (Exception ex) {
-                        //    Console.WriteLine(ex.Message);
-                        //}
-                    } else {
+                } else {
                     // Not all data received. Get more.  
                     handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
                 }
