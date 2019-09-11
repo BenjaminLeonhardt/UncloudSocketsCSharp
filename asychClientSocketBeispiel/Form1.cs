@@ -380,11 +380,15 @@ namespace asychClientSocketBeispiel {
                     } else {
                         Invoke((MethodInvoker)delegate {
                             ListViewItem.ListViewSubItem newItem = new ListViewItem.ListViewSubItem();
-                            newItem.Text = "100 %";
-                            if (filesView2.SelectedItems[0].SubItems.Count == 2) {
-                                filesView2.SelectedItems[0].SubItems.Add(newItem);
-                            } else if (filesView2.SelectedItems[0].SubItems.Count == 3) {
-                                filesView2.SelectedItems[0].SubItems[2] = newItem;
+                            newItem.Text = "100 %";                           
+                            foreach (ListViewItem listItem in filesView2.Items) {
+                                if (listItem.Text.Equals(dateiName)) {
+                                    if (listItem.SubItems.Count == 2) {
+                                        listItem.SubItems.Add(newItem);
+                                    } else if (listItem.SubItems.Count == 3) {
+                                        listItem.SubItems[2] = newItem;
+                                    }
+                                }
                             }
                         });
                     }

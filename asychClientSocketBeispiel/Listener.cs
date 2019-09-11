@@ -201,13 +201,18 @@ namespace asychClientSocketBeispiel {
                         }
 
                         if (gefunden) {
-                            ChatForm chatform = new ChatForm();
-                            chatform.Text = "Chat mit " + name;
-                            chatform.Show();
+                            try {
+
+                                ParameterizedThreadStart pts = new ParameterizedThreadStart(chatThread);
+                                Thread sendThreadObj = new Thread(pts);
+                                sendThreadObj.Start(name);
+                            } catch(Exception ex) {
+                                Console.WriteLine(ex.ToString());
+                            }
+                            
+
                         } else {
-                            ChatForm chatform = new ChatForm();
-                            chatform.Text = "Chat mit " + name;
-                            chatform.Show();
+                            
                         }                        
                     }
                 } else {
@@ -217,7 +222,14 @@ namespace asychClientSocketBeispiel {
             }
         }
 
-        private static void Send(Socket handler, String data) {
+        public static void chatThread(Object peerName) {
+            ChatForm chatform = new ChatForm();
+            chatform.Text = "Chat mit " + (string)peerName;
+            chatform.Show();
+
+        }
+
+        public static void Send(Socket handler, String data) {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.UTF8.GetBytes(data);
 
@@ -262,12 +274,6 @@ namespace asychClientSocketBeispiel {
                 // Complete sending the data to the remote device.  
                 int bytesSent = handler.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to peer.", bytesSent);
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Disconnect(false);
-                //handler.Close();
-                //handler.Dispose();
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
 
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());

@@ -59,6 +59,7 @@
             this.chatSendeButton.TabIndex = 2;
             this.chatSendeButton.Text = "Senden";
             this.chatSendeButton.UseVisualStyleBackColor = true;
+            this.chatSendeButton.Click += new System.EventHandler(this.chatSendeButton_Click);
             // 
             // ChatForm
             // 

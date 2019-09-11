@@ -13,5 +13,17 @@ namespace asychClientSocketBeispiel {
         public ChatForm() {
             InitializeComponent();
         }
+
+        private void chatSendeButton_Click(object sender, EventArgs e) {
+            StateObject chatPeer = new StateObject();
+            foreach (StateObject item in Form1.chatObjekte) {
+                if (this.Text.Contains(item.peerName)) {
+                    chatPeer = item;
+                }
+            }
+            AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{4☻" + chatEingabeFeld.Text+"}end");
+            chatText.Text = chatText.Text + "\n" + chatEingabeFeld.Text;
+            chatEingabeFeld.Text = "";
+        }
     }
 }
