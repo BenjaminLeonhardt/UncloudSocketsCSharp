@@ -23,7 +23,7 @@
         /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
         /// </summary>
         private void InitializeComponent() {
-            this.button2 = new System.Windows.Forms.Button();
+            this.chatButton = new System.Windows.Forms.Button();
             this.verbindenButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.pfadTextBox = new System.Windows.Forms.TextBox();
@@ -49,14 +49,15 @@
             this.OSCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
-            // button2
+            // chatButton
             // 
-            this.button2.Location = new System.Drawing.Point(689, 59);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(119, 23);
-            this.button2.TabIndex = 33;
-            this.button2.Text = "Chat Fenster öffnen";
-            this.button2.UseVisualStyleBackColor = true;
+            this.chatButton.Location = new System.Drawing.Point(689, 59);
+            this.chatButton.Name = "chatButton";
+            this.chatButton.Size = new System.Drawing.Size(119, 23);
+            this.chatButton.TabIndex = 33;
+            this.chatButton.Text = "Chat Fenster öffnen";
+            this.chatButton.UseVisualStyleBackColor = true;
+            this.chatButton.Click += new System.EventHandler(this.chatButton_Click);
             // 
             // verbindenButton
             // 
@@ -282,7 +283,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(818, 768);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.chatButton);
             this.Controls.Add(this.verbindenButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pfadTextBox);
@@ -312,7 +313,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button chatButton;
         public System.Windows.Forms.Button verbindenButton;
         private System.Windows.Forms.Button button1;
         public System.Windows.Forms.TextBox pfadTextBox;

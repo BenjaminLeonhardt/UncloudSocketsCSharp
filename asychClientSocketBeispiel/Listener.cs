@@ -31,6 +31,8 @@ namespace asychClientSocketBeispiel {
         public StringBuilder sb = new StringBuilder();
         public string dateiName = "";
         public long dateiGroesse = 0;
+        public ChatForm chatForm;
+        public string peerName;
     }
 
     public class Peer {
@@ -70,7 +72,7 @@ namespace asychClientSocketBeispiel {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
 
-                Console.WriteLine("gebe semaphore frei");
+                //Console.WriteLine("gebe semaphore frei");
                 fuerPeersListe.Release();
                 while (run) {
                     // Set the event to nonsignaled state.  
