@@ -220,22 +220,31 @@ namespace asychClientSocketBeispiel {
 
 
         private static void SendDatei(Socket handler, String dateiname){
-            FileStream fileStream = File.Open(formStatic.pfadTextBox.Text + "\\" + dateiname, FileMode.Open);
-            DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
-            FileInfo[] fileInfoArray = directoryInfo.GetFiles();
-            byte[] byteData=new byte[1024];
-            foreach (FileInfo item in fileInfoArray) {
-                if (item.Name.Equals(dateiname)){
-                    byteData = new byte[item.Length];
+            try
+            {
+                FileStream fileStream = File.Open(formStatic.pfadTextBox.Text + "\\" + dateiname, FileMode.Open);
+                DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
+                FileInfo[] fileInfoArray = directoryInfo.GetFiles();
+                byte[] byteData = new byte[1024];
+                foreach (FileInfo item in fileInfoArray)
+                {
+                    if (item.Name.Equals(dateiname))
+                    {
+                        byteData = new byte[item.Length];
+                    }
                 }
+                fileStream.Read(byteData, 0, byteData.Length);
+                fileStream.Close();
+                // Convert the string data to byte data using ASCII encoding.  
+
+
+                // Begin sending the data to the remote device.  
+                handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
-            fileStream.Read(byteData, 0, byteData.Length);
-            fileStream.Close();
-            // Convert the string data to byte data using ASCII encoding.  
-
-
-            // Begin sending the data to the remote device.  
-            handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
+            
         }
 
         private static void SendCallback(IAsyncResult ar) {
