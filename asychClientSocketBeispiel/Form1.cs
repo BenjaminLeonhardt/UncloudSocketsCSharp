@@ -23,7 +23,7 @@ namespace asychClientSocketBeispiel {
         public static ManualResetEvent sendDone = new ManualResetEvent(false);
         public static ManualResetEvent receiveDone = new ManualResetEvent(false);
         public static string IpOfSelectedPeer = "";
-
+        public static List<StateObject> chatObjekte = new List<StateObject>();
         public static Semaphore semaphoreDateiSpeichern = new Semaphore(1, 1);
 
         public static string UncloudConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Uncloud\\";
@@ -113,7 +113,7 @@ namespace asychClientSocketBeispiel {
 
         private void peersListe_SelectedIndexChanged(object sender, EventArgs e) {
             try {
-                string selectedItem = peersListe.SelectedItems[0].SubItems[1].Text;
+                string selectedItem = peersListe.SelectedItems[0].SubItems[2].Text;
 
                 try {
                     ParameterizedThreadStart pts = new ParameterizedThreadStart(getFilesThread);
@@ -440,27 +440,51 @@ namespace asychClientSocketBeispiel {
         }
 
         private void chatButton_Click(object sender, EventArgs e) {
-            ChatForm chatform = new ChatForm();
-            chatform.Show();
+            if (IpOfSelectedPeer.Equals("")) {
+               MessageBox.Show("Es wurde kein Peer ausgewählt...", "Achtung", MessageBoxButtons.OK);
+               return;
+            }
 
+            
+            string NameDesAusgewaehltenPeers = peersListe.SelectedItems[0].SubItems[1].Text;
+            bool gefunden = false;
+            StateObject tmpObjekt = null;
+            foreach (StateObject item in chatObjekte) {
+                if (item.peerName.Equals(NameDesAusgewaehltenPeers)) {
+                    tmpObjekt = item;
+                    gefunden = true;
+                }
+            }
 
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(IpOfSelectedPeer), peersPort);
-            Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            if (gefunden) {
+                ChatForm chatform = new ChatForm();
+                chatform.Text = "Chat mit " + tmpObjekt.peerName;
+                chatform.Show();
+                tmpObjekt.chatForm = chatform;
+            } else {
 
-            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
-            connectDone.WaitOne();
+                ChatForm chatform = new ChatForm();
+                chatform.Text = "Chat mit " + NameDesAusgewaehltenPeers;
+                chatform.Show();
+                IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(IpOfSelectedPeer), peersPort);
+                Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
-            StateObject state = new StateObject();
-            state.workSocket = client;
-            state.chatForm = chatform;
-            state.peerName = peersListe.SelectedItems[0].SubItems[0].Text;
+                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+                connectDone.WaitOne();
 
-            Thread.Sleep(100);
-            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackChat), state);
+                StateObject state = new StateObject();
+                state.workSocket = client;
+                state.chatForm = chatform;
+                state.peerName = NameDesAusgewaehltenPeers;
+                chatObjekte.Add(state);
+                Thread.Sleep(100);
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackChat), state);
 
-            Thread.Sleep(100);
-            //sendDone.WaitOne();
-            sendThreadChat(client);
+                Thread.Sleep(100);
+                //sendDone.WaitOne();
+                sendThreadChat(client);
+            }
+            
 
         }
 

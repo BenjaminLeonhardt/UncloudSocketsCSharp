@@ -224,14 +224,14 @@ namespace asychClientSocketBeispiel {
                                 if(item[j] == ':') {
                                     break;
                                 }
-                                p.name += item[j];
+                                p.ip += item[j];
                             }
                             j++;
                             for (; j < item.Length; j++) {
                                 if (item[j] == ':') {
                                     break;
                                 }
-                                p.ip += item[j];
+                                p.name += item[j];
                             }
                             j++;
                             for (; j < item.Length; j++) {
