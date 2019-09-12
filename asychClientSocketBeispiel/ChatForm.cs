@@ -29,7 +29,7 @@ namespace asychClientSocketBeispiel {
 
                 //Console.WriteLine("gebe semaphore frei");
                 
-                while (Form1.run) {
+                //while (Form1.run) {
                     // Set the event to nonsignaled state.  
                     //allDone.Reset();
 
@@ -39,7 +39,7 @@ namespace asychClientSocketBeispiel {
                     Thread.Sleep(100);
                     // Wait until a connection is made before continuing.  
                     //allDone.WaitOne();
-                }
+                //}
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
@@ -86,7 +86,8 @@ namespace asychClientSocketBeispiel {
 
 
             string _ip = chatPeer.workSocket.RemoteEndPoint.ToString();
-            
+            string[] ipArray = _ip.Split(':');
+            _ip = ipArray[3].Substring(0, ipArray[3].Length - 1);
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), 5002);
             Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
@@ -206,7 +207,7 @@ namespace asychClientSocketBeispiel {
                 Console.WriteLine("Socket connected to {0}", client.RemoteEndPoint.ToString());
 
                 // Signal that the connection has been made.  
-                
+                connectDone.Set();
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
