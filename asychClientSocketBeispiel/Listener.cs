@@ -240,10 +240,7 @@ namespace asychClientSocketBeispiel {
         }
 
         public static void chatThread(Object peerName) {
-            ChatForm chatform = new ChatForm();
-            
-            //chatform.Text = "Chat mit " + (string)peerName;
-            //chatform.Show();
+            ChatForm chatform = new ChatForm();           
             ParameterizedThreadStart pts = new ParameterizedThreadStart(chatFensterThread);
             Thread sendThreadObj = new Thread(pts);
             sendThreadObj.Start(chatform);
@@ -256,8 +253,16 @@ namespace asychClientSocketBeispiel {
                     tmpStateObject = item;
                 }
             }
+            
             Thread.Sleep(100);
-            tmpStateObject.workSocket.BeginReceive(tmpStateObject.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), tmpStateObject);
+            try{
+                tmpStateObject.workSocket.BeginReceive(tmpStateObject.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), tmpStateObject);
+
+            }
+            catch(Exception ex){
+                Console.WriteLine(ex.ToString());
+            }
+            
         }
         public static void chatFensterThread(Object fensterObj) {
             ChatForm chatform = (ChatForm)fensterObj;
@@ -268,11 +273,7 @@ namespace asychClientSocketBeispiel {
                     chatform.Show();
                 }
             }
-            //chatform.Invoke((MethodInvoker)delegate {
             Application.Run(chatform);
-            //});
-            
-            
         }
 
 
