@@ -470,6 +470,7 @@ namespace asychClientSocketBeispiel {
 
             if (gefunden) {
                 ChatForm chatform = new ChatForm();
+                Application.Run(chatform);
                 chatform.Text = "Chat mit " + tmpObjekt.peerName;
                 chatform.Show();
                 tmpObjekt.chatForm = chatform;

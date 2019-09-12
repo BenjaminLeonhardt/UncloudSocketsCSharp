@@ -115,15 +115,6 @@ namespace asychClientSocketBeispiel {
             }
         }
 
-        //static void receiveThread(Object client) {
-        //    // Send test data to the remote device.  
-            
-        //    while (true) {
-        //        Receive((Socket)client);
-        //        Thread.Sleep(500);
-        //    }
-        //}
-
         private static void ConnectCallback(IAsyncResult ar) {
             try {
                 // Retrieve the socket from the state object.  
@@ -195,12 +186,6 @@ namespace asychClientSocketBeispiel {
 
                         List<Peer> peersListeLokal = new List<Peer>();
 
-                        //int count = 0;
-                        //for (int i = 0; i < response.Length; i++) {
-                        //    if (response[i] == '♥') {
-                        //        count++;
-                        //    }
-                        //}    
                         List<string> peersAlsStrings = new List<string>();
                         
                         for (int i = 0; i < responeOhneAktion.Length; i++) {

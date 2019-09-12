@@ -223,9 +223,14 @@ namespace asychClientSocketBeispiel {
                             }
                         }
                     } else if (aktion == 5) {
-                        state.chatForm.Invoke((MethodInvoker)delegate {
-                            state.chatForm.chatText.Text = state.chatForm.chatText.Text + "\n" + contentOhneHeaderUndTailer;
-                        });
+                        try {
+                            state.chatForm.Invoke((MethodInvoker)delegate {
+                                state.chatForm.chatText.Text = state.chatForm.chatText.Text + "\n" + contentOhneHeaderUndTailer.Substring(2);
+                            });
+                        } catch(Exception ex) {
+                            Console.WriteLine(ex.ToString());
+                        }
+                        
                     }
                     } else {
                     // Not all data received. Get more.  
@@ -236,8 +241,13 @@ namespace asychClientSocketBeispiel {
 
         public static void chatThread(Object peerName) {
             ChatForm chatform = new ChatForm();
-            chatform.Text = "Chat mit " + (string)peerName;
-            chatform.Show();
+            
+            //chatform.Text = "Chat mit " + (string)peerName;
+            //chatform.Show();
+            ParameterizedThreadStart pts = new ParameterizedThreadStart(chatFensterThread);
+            Thread sendThreadObj = new Thread(pts);
+            sendThreadObj.Start(chatform);
+            
             StateObject tmpStateObject = null;
             string name = (string)peerName;
             foreach (StateObject item in Form1.chatObjekte) {
@@ -246,9 +256,25 @@ namespace asychClientSocketBeispiel {
                     tmpStateObject = item;
                 }
             }
-            
+            Thread.Sleep(100);
             tmpStateObject.workSocket.BeginReceive(tmpStateObject.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), tmpStateObject);
         }
+        public static void chatFensterThread(Object fensterObj) {
+            ChatForm chatform = (ChatForm)fensterObj;
+
+            foreach (StateObject item in Form1.chatObjekte) {
+                if (chatform == item.chatForm) {
+                    chatform.Text = "Chat mit " + item.peerName;
+                    chatform.Show();
+                }
+            }
+            //chatform.Invoke((MethodInvoker)delegate {
+            Application.Run(chatform);
+            //});
+            
+            
+        }
+
 
         public static void Send(Socket handler, String data) {
             // Convert the string data to byte data using ASCII encoding.  
