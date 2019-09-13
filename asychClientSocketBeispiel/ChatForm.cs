@@ -250,7 +250,7 @@ namespace asychClientSocketBeispiel {
                         if (aktion == 5) {
 
                             string[] aufgeteilteNachricht = content.Split(':');
-                            string empfangenerChatText = aufgeteilteNachricht[5];
+                            string empfangenerChatText = aufgeteilteNachricht[3];
                             Invoke((MethodInvoker)delegate {
                                 chatText.Text = chatText.Text + Environment.NewLine + empfangenerChatText;
                             });
