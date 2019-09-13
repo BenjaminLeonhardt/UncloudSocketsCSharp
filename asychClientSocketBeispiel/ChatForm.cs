@@ -36,15 +36,15 @@ namespace asychClientSocketBeispiel {
                 // Start an asynchronous socket to listen for connections.  
                 //Console.WriteLine("Waiting for a connection...");
 
-                try {
-                    ParameterizedThreadStart pts = new ParameterizedThreadStart(acceptThread);
-                    Thread sendThreadObj = new Thread(pts);
-                    sendThreadObj.Start(listener);
-                } catch {
+                //try {
+                //    ParameterizedThreadStart pts = new ParameterizedThreadStart(acceptThread);
+                //    Thread sendThreadObj = new Thread(pts);
+                //    sendThreadObj.Start(listener);
+                //} catch {
 
-                }
+                //}
 
-                //listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+                listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
                 Thread.Sleep(100);                
                 // Wait until a connection is made before continuing.  
                 //allDone.WaitOne();
@@ -89,6 +89,8 @@ namespace asychClientSocketBeispiel {
             StateObject state = new StateObject();
             state.workSocket = handler;
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+            Thread.Sleep(100);
+            handler.BeginAccept(new AsyncCallback(AcceptCallback), state);
         }
 
 
@@ -125,7 +127,7 @@ namespace asychClientSocketBeispiel {
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), 5002);
             Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
-            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), chatPeer);
             connectDone.WaitOne();
 
             StateObject state = new StateObject();
