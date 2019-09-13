@@ -28,24 +28,39 @@ namespace asychClientSocketBeispiel {
                 listener.Listen(100);
 
                 //Console.WriteLine("gebe semaphore frei");
-                
-                //while (Form1.run) {
-                    // Set the event to nonsignaled state.  
-                    //allDone.Reset();
 
-                    // Start an asynchronous socket to listen for connections.  
-                    //Console.WriteLine("Waiting for a connection...");
-                    listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
-                    Thread.Sleep(100);                
-                    // Wait until a connection is made before continuing.  
-                    //allDone.WaitOne();
-                    //}
+                //while (Form1.run) {
+                // Set the event to nonsignaled state.  
+                //allDone.Reset();
+
+                // Start an asynchronous socket to listen for connections.  
+                //Console.WriteLine("Waiting for a connection...");
+
+                try {
+                    ParameterizedThreadStart pts = new ParameterizedThreadStart(acceptThread);
+                    Thread sendThreadObj = new Thread(pts);
+                    sendThreadObj.Start(listener);
+                } catch {
+
+                }
+
+                //listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+                Thread.Sleep(100);                
+                // Wait until a connection is made before continuing.  
+                //allDone.WaitOne();
+                //}
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
-
-            
         }
+
+        public void acceptThread(Object listener) {
+            Socket socket = (Socket)listener;
+            while (Form1.run) {
+                socket.BeginAccept(new AsyncCallback(AcceptCallback), (Socket)socket);
+            }
+        }
+
         public static Semaphore semaphoreTextSenden = new Semaphore(1, 1);
         public static List<Peer> peersListe = new List<Peer>();
 
@@ -143,7 +158,7 @@ namespace asychClientSocketBeispiel {
             //if (chatPeer.workSocket.Connected) {
             //    AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{5☻" + chatEingabeFeld.Text + "}end");
             //}
-            semaphoreTextSenden.WaitOne();
+            //semaphoreTextSenden.WaitOne();
             chatText.Text = chatText.Text + Environment.NewLine + chatEingabeFeld.Text;
             chatEingabeFeld.Text = "";
         }
@@ -166,7 +181,8 @@ namespace asychClientSocketBeispiel {
 
             // Send test data to the remote device.  
             string text = "beg{" + "5" + ":" + chatPeer.peerName + ":" + ipAddress.ToString() + ":" + chatEingabeFeld.Text + ":" + "}end";
-            semaphoreTextSenden.Release();
+            //if(semaphoreTextSenden.)
+            //semaphoreTextSenden.Release();
             Send((Socket)client, text);
 
         }
