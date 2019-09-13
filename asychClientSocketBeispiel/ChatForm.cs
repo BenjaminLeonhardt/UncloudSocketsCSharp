@@ -87,7 +87,22 @@ namespace asychClientSocketBeispiel {
 
             string _ip = chatPeer.workSocket.RemoteEndPoint.ToString();
             string[] ipArray = _ip.Split(':');
-            _ip = ipArray[3].Substring(0, ipArray[3].Length - 1);
+            foreach (string item in ipArray) {
+                if (item.Contains("192")) {
+                    int zahl = -1;
+                    try {
+                        zahl = Convert.ToInt32(item[item.Length - 1]);
+                    } catch {
+
+                    }
+                    if (zahl != -1) {
+                        _ip = item;
+                    }else {
+                        _ip = item.Substring(0, ipArray[3].Length - 1);
+                    }
+                }
+            }
+            //_ip = ipArray[3].Substring(0, ipArray[3].Length - 1);
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), 5002);
             Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
@@ -109,8 +124,8 @@ namespace asychClientSocketBeispiel {
             sendThread(client);
 
             // Release the socket.  
-            client.Shutdown(SocketShutdown.Both);
-            client.Close();
+            //client.Shutdown(SocketShutdown.Both);
+            //client.Close();
 
             //try {
             //    chatPeer.workSocket.BeginDisconnect(true, DisconnectCallback, chatPeer);
