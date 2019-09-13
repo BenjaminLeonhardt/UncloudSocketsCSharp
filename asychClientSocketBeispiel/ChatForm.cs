@@ -58,6 +58,7 @@ namespace asychClientSocketBeispiel {
             Socket socket = (Socket)listener;
             while (Form1.run) {
                 socket.BeginAccept(new AsyncCallback(AcceptCallback), (Socket)socket);
+                Thread.Sleep(100);
             }
         }
 
@@ -115,8 +116,8 @@ namespace asychClientSocketBeispiel {
                         _ip = item;
                         break;
                     }else {
-                        break;
                         _ip = item.Substring(0, ipArray[3].Length - 1);
+                        break;
                     }
                 }
             }
@@ -228,10 +229,35 @@ namespace asychClientSocketBeispiel {
 
                     // There  might be more data, so store the data received so far.  
                     state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+                    
+                    string content = state.sb.ToString();
 
-                    Invoke((MethodInvoker)delegate {
-                        chatText.Text = chatText.Text + Environment.NewLine + state.sb;
-                    });
+                    if (content.IndexOf("}end") > -1) {
+                        // All the data has been read from the   
+                        // client. Display it on the console.  
+                        Console.WriteLine("Read {0} bytes from socket. \n Data : {1}", content.Length, content);
+                        // Echo the data back to the client.  
+                        int begin = content.IndexOf("beg{");
+                        int ende = content.IndexOf("}end");
+
+                        string contentOhneHeaderUndTailer = "";
+                        for (int j = begin + 4; j < ende; j++) {
+                            contentOhneHeaderUndTailer += content[j];
+                        }
+                        int aktion = -1;
+
+                        aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
+                        if (aktion == 5) {
+
+                            string[] aufgeteilteNachricht = content.Split(':');
+                            string empfangenerChatText = aufgeteilteNachricht[5];
+                            Invoke((MethodInvoker)delegate {
+                                chatText.Text = chatText.Text + Environment.NewLine + empfangenerChatText;
+                            });
+                        }
+                    }
+
+                    
 
                 }
             } catch (Exception ex) {
