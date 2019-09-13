@@ -90,7 +90,7 @@ namespace asychClientSocketBeispiel {
             state.workSocket = handler;
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
             Thread.Sleep(100);
-            handler.BeginAccept(new AsyncCallback(AcceptCallback), state);
+            //handler.BeginAccept(new AsyncCallback(AcceptCallback), state);
         }
 
 
@@ -128,7 +128,7 @@ namespace asychClientSocketBeispiel {
             Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
             client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), chatPeer);
-            connectDone.WaitOne();
+            //connectDone.WaitOne();
 
             StateObject state = new StateObject();
             state.workSocket = client;
