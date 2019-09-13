@@ -36,16 +36,17 @@ namespace asychClientSocketBeispiel {
                     // Start an asynchronous socket to listen for connections.  
                     //Console.WriteLine("Waiting for a connection...");
                     listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
-                    Thread.Sleep(100);
+                    Thread.Sleep(100);                
                     // Wait until a connection is made before continuing.  
                     //allDone.WaitOne();
-                //}
+                    //}
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
             }
 
             
         }
+        public static Semaphore semaphoreTextSenden = new Semaphore(1, 1);
         public static List<Peer> peersListe = new List<Peer>();
 
         public void AcceptCallback(IAsyncResult ar) {
@@ -95,9 +96,11 @@ namespace asychClientSocketBeispiel {
                     } catch {
 
                     }
-                    if (zahl != -1) {
+                    if (zahl != -1 && zahl != 93) {
                         _ip = item;
+                        break;
                     }else {
+                        break;
                         _ip = item.Substring(0, ipArray[3].Length - 1);
                     }
                 }
@@ -140,7 +143,7 @@ namespace asychClientSocketBeispiel {
             //if (chatPeer.workSocket.Connected) {
             //    AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{5☻" + chatEingabeFeld.Text + "}end");
             //}
-
+            semaphoreTextSenden.WaitOne();
             chatText.Text = chatText.Text + Environment.NewLine + chatEingabeFeld.Text;
             chatEingabeFeld.Text = "";
         }
@@ -162,7 +165,8 @@ namespace asychClientSocketBeispiel {
             IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
 
             // Send test data to the remote device.  
-            string text = "beg{" + "2" + ":" + chatPeer.peerName + ":" + ipAddress.ToString() + ":♥" + "}end";
+            string text = "beg{" + "5" + ":" + chatPeer.peerName + ":" + ipAddress.ToString() + ":" + chatEingabeFeld.Text + ":" + "}end";
+            semaphoreTextSenden.Release();
             Send((Socket)client, text);
 
         }
@@ -205,6 +209,14 @@ namespace asychClientSocketBeispiel {
                 int bytesRead = client.EndReceive(ar);
 
                 if (bytesRead > 0) {
+
+                    // There  might be more data, so store the data received so far.  
+                    state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+
+                    Invoke((MethodInvoker)delegate {
+                        chatText.Text = chatText.Text + Environment.NewLine + state.sb;
+                    });
+
                 }
             } catch (Exception ex) {
                 Console.WriteLine(ex.ToString());
