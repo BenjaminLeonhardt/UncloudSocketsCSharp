@@ -183,7 +183,7 @@ namespace asychClientSocketBeispiel {
             IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
 
             // Send test data to the remote device.  
-            string text = "beg{" + "5" + ":" + chatPeer.peerName + ":" + ipAddress.ToString() + ":" + chatEingabeFeld.Text + ":" + "}end";
+            string text = "beg{" + "5" + "☻" + chatPeer.peerName + "☻" + ipAddress.ToString() + "☻" + chatEingabeFeld.Text + "☻" + "}end";
             //if(semaphoreTextSenden.)
             //semaphoreTextSenden.Release();
             Send((Socket)client, text);
@@ -251,7 +251,7 @@ namespace asychClientSocketBeispiel {
                         aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
                         if (aktion == 5) {
 
-                            string[] aufgeteilteNachricht = content.Split(':');
+                            string[] aufgeteilteNachricht = content.Split('☻');
                             string empfangenerChatText = aufgeteilteNachricht[3];
                             Invoke((MethodInvoker)delegate {
                                 chatText.Text = chatText.Text + Environment.NewLine + empfangenerChatText;
