@@ -25,6 +25,7 @@ namespace asychClientSocketBeispiel {
         public static string IpOfSelectedPeer = "";
         public static List<StateObject> chatObjekte = new List<StateObject>();
         public static Semaphore semaphoreDateiSpeichern = new Semaphore(1, 1);
+        public static string eigenerName = "";
 
         public static string UncloudConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Uncloud\\";
         public static string UncloudConfigFilename = "config.ini";
@@ -37,6 +38,7 @@ namespace asychClientSocketBeispiel {
                 ServerIPText.Text = dateiInhalt[0];
                 ServerPortText.Text = dateiInhalt[1];
                 nameTextBox.Text = dateiInhalt[2];
+                eigenerName = nameTextBox.Text;
                 pfadTextBox.Text = dateiInhalt[3];
                 reader.Close();
                 stream.Close();
@@ -449,17 +451,21 @@ namespace asychClientSocketBeispiel {
             }
 
             if (gefunden) {
-                ChatForm chatform = new ChatForm();
+                //ChatForm chatform = new ChatForm();
                 try {
-                    new ChatForm().ShowDialog();
+                    ChatForm chatformNeu = new ChatForm();
+                    chatformNeu.Text = "Chat mit " + tmpObjekt.peerName;
+                    tmpObjekt.chatForm = chatformNeu;
+                    chatformNeu.ShowDialog();
+                    
                     //Application.Run(chatform);
                 } catch (Exception ex) {
                     Console.WriteLine(ex.ToString());
                 }
                 
-                chatform.Text = "Chat mit " + tmpObjekt.peerName;
-                chatform.Show();
-                tmpObjekt.chatForm = chatform;
+                //chatform.Text = "Chat mit " + tmpObjekt.peerName;
+                //chatform.Show();
+                //tmpObjekt.chatForm = chatform;
             } else {
 
                 ChatForm chatform = new ChatForm();

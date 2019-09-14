@@ -194,7 +194,7 @@ namespace asychClientSocketBeispiel {
             IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
 
             // Send test data to the remote device.  
-            string text = "beg{" + "5" + "☻" + chatPeer.peerName + "☻" + ipAddress.ToString() + "☻" + chatEingabeFeld.Text + "☻" + "}end";
+            string text = "beg{" + "5" + "☻" + Form1.eigenerName + "☻" + ipAddress.ToString() + "☻" + chatEingabeFeld.Text + "☻" + "}end";
             //if(semaphoreTextSenden.)
             //semaphoreTextSenden.Release();
             Send((Socket)client, text);

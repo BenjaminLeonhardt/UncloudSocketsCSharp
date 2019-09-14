@@ -317,7 +317,7 @@
         public System.Windows.Forms.Button verbindenButton;
         private System.Windows.Forms.Button button1;
         public System.Windows.Forms.TextBox pfadTextBox;
-        private System.Windows.Forms.TextBox nameTextBox;
+        public System.Windows.Forms.TextBox nameTextBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox ServerPortText;
