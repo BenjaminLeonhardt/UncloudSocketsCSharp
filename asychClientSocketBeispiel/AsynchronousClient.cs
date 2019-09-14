@@ -108,8 +108,9 @@ namespace asychClientSocketBeispiel {
 
         static void sendThread(Object client) {
             // Send test data to the remote device.  
-            string text = "beg{" + "1" + ":" + name + ":" + ipAddress + ":♥" + "}end";
+            string text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":♥" + "}end";
             while (Form1.run) {
+                text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":♥" + "}end";
                 Send((Socket)client, text);
                 Thread.Sleep(1000);
             }
@@ -245,7 +246,7 @@ namespace asychClientSocketBeispiel {
 
                         } else {
                             for (int i = 0; i < peersListe.Count; i++) {
-                                if (!peersListe[i].ip.Equals(peersListeLokal[i].ip)){
+                                if (!peersListe[i].ip.Equals(peersListeLokal[i].ip) || !peersListe[i].name.Equals(peersListeLokal[i].name)) {
                                     peersListe = peersListeLokal;
                                     formStatic.Invoke((MethodInvoker)delegate {
                                         int k = 1;

@@ -267,7 +267,12 @@ namespace asychClientSocketBeispiel {
             //Console.WriteLine("sende zu " + client.RemoteEndPoint.ToString() + " " + data);
             // Begin sending the data to the remote device.  
             if (Form1.run) {
-                client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+                try {
+                    client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.ToString());
+                }
+                
             }
         }
 
@@ -567,6 +572,24 @@ namespace asychClientSocketBeispiel {
 
             } catch {
 
+            }
+        }
+
+        private void nameTextBox_KeyUp(object sender, KeyEventArgs e) {
+            eigenerName = nameTextBox.Text;
+            if (File.Exists(UncloudConfigPath + UncloudConfigFilename)) {
+                FileStream stream = File.Open(UncloudConfigPath + UncloudConfigFilename, FileMode.Create);
+                BinaryWriter writer = new BinaryWriter(stream);
+                writer.Write(ServerIPText.Text + ";" + ServerPortText.Text + ";" + nameTextBox.Text + ";" + pfadTextBox.Text);
+                writer.Close();
+                stream.Close();
+            } else {
+                Directory.CreateDirectory(UncloudConfigPath);
+                FileStream stream = File.Open(UncloudConfigPath + UncloudConfigFilename, FileMode.Create);
+                BinaryWriter writer = new BinaryWriter(stream);
+                writer.Write("192.168.2.100;5000;" + nameTextBox.Text + ";" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                writer.Close();
+                stream.Close();
             }
         }
     }

@@ -102,6 +102,7 @@
             this.nameTextBox.Size = new System.Drawing.Size(170, 20);
             this.nameTextBox.TabIndex = 29;
             this.nameTextBox.Text = "Ben";
+            this.nameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.nameTextBox_KeyUp);
             // 
             // label7
             // 
