@@ -286,27 +286,7 @@ namespace asychClientSocketBeispiel {
         }
 
         private void filesView2_SelectedIndexChanged(object sender, EventArgs e) {
-            try {
-                string selectedItem = filesView2.SelectedItems[0].SubItems[0].Text;
-                if (File.Exists(pfadTextBox.Text + "\\" + selectedItem)) {
-                    DialogResult result = MessageBox.Show("Datei vorhanden. Überschreiben?", "Achtung", MessageBoxButtons.YesNo);
-                    if (result == DialogResult.No) {
-                        return;
-                    } else {
-                        File.Delete(pfadTextBox.Text + "\\" + selectedItem);
-                    }
-                }
-                try {
-                    ParameterizedThreadStart pts = new ParameterizedThreadStart(getThisFileThread);
-                    Thread sendThreadObj = new Thread(pts);
-                    sendThreadObj.Start(selectedItem);
-                } catch {
 
-                }
-
-            } catch {
-
-            }
         }
 
         public void getThisFileThread(Object filename) {
@@ -471,7 +451,8 @@ namespace asychClientSocketBeispiel {
             if (gefunden) {
                 ChatForm chatform = new ChatForm();
                 try {
-                    Application.Run(chatform);
+                    new ChatForm().ShowDialog();
+                    //Application.Run(chatform);
                 } catch (Exception ex) {
                     Console.WriteLine(ex.ToString());
                 }
@@ -556,6 +537,30 @@ namespace asychClientSocketBeispiel {
                 }
             }catch(Exception ex) {
                 Console.WriteLine(ex.ToString());
+            }
+        }
+
+        private void filesView2_DoubleClick(object sender, EventArgs e) {
+            try {
+                string selectedItem = filesView2.SelectedItems[0].SubItems[0].Text;
+                if (File.Exists(pfadTextBox.Text + "\\" + selectedItem)) {
+                    DialogResult result = MessageBox.Show("Datei vorhanden. Überschreiben?", "Achtung", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.No) {
+                        return;
+                    } else {
+                        File.Delete(pfadTextBox.Text + "\\" + selectedItem);
+                    }
+                }
+                try {
+                    ParameterizedThreadStart pts = new ParameterizedThreadStart(getThisFileThread);
+                    Thread sendThreadObj = new Thread(pts);
+                    sendThreadObj.Start(selectedItem);
+                } catch {
+
+                }
+
+            } catch {
+
             }
         }
     }
