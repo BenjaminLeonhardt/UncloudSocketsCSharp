@@ -173,7 +173,7 @@ namespace asychClientSocketBeispiel {
             //    AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{5☻" + chatEingabeFeld.Text + "}end");
             //}
             //semaphoreTextSenden.WaitOne();
-            chatText.Text = chatText.Text + Environment.NewLine + chatEingabeFeld.Text;
+            chatText.Text = chatText.Text + Environment.NewLine + Form1.eigenerName + ": " + chatEingabeFeld.Text;
             chatEingabeFeld.Text = "";
         }
 
@@ -267,7 +267,7 @@ namespace asychClientSocketBeispiel {
                             foreach (StateObject item in Form1.chatObjekte) {
                                 if (item.peerName.Contains(aufgeteilteNachricht[1])) {                                  
                                     item.chatForm.Invoke((MethodInvoker)delegate {
-                                        item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + empfangenerChatText;
+                                        item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + aufgeteilteNachricht[1] + ":" + empfangenerChatText;
                                     });
                                     break;
                                 }
