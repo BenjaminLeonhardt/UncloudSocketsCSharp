@@ -33,6 +33,7 @@ namespace asychClientSocketBeispiel {
         public long dateiGroesse = 0;
         public ChatForm chatForm;
         public string peerName;
+        public string ip;
     }
 
     public class Peer {

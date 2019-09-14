@@ -95,14 +95,15 @@ namespace asychClientSocketBeispiel {
 
 
         private void chatSendeButton_Click(object sender, EventArgs e) {
+
             StateObject chatPeer = new StateObject();
             foreach (StateObject item in Form1.chatObjekte) {
                 if (this.Text.Contains(item.peerName)) {
                     chatPeer = item;
                     item.chatForm = this;
+                    
                 }
             }
-
 
             string _ip = chatPeer.workSocket.RemoteEndPoint.ToString();
             string[] ipArray = _ip.Split(':');
@@ -117,12 +118,22 @@ namespace asychClientSocketBeispiel {
                     if (zahl != -1 && zahl != 93) {
                         _ip = item;
                         break;
-                    }else {
+                    } else {
                         _ip = item.Substring(0, ipArray[3].Length - 1);
                         break;
                     }
                 }
             }
+
+        
+            foreach (StateObject item in Form1.chatObjekte) {
+                if (this.Text.Contains(item.peerName)) {                   
+                    item.ip = _ip;
+                }
+            }
+
+
+            
             //_ip = ipArray[3].Substring(0, ipArray[3].Length - 1);
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), 5002);
             Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
@@ -254,9 +265,9 @@ namespace asychClientSocketBeispiel {
                             string[] aufgeteilteNachricht = content.Split('☻');
                             string empfangenerChatText = aufgeteilteNachricht[3];
                             foreach (StateObject item in Form1.chatObjekte) {
-                                if (this.Text.Contains(item.peerName)) {                                  
+                                if (item.ip.Contains(aufgeteilteNachricht[2])) {                                  
                                     item.chatForm.Invoke((MethodInvoker)delegate {
-                                        chatText.Text = chatText.Text + Environment.NewLine + empfangenerChatText;
+                                        item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + empfangenerChatText;
                                     });
                                     break;
                                 }
