@@ -12,15 +12,19 @@ namespace asychClientSocketBeispiel {
         public static ManualResetEvent connectDone = new ManualResetEvent(false);
         public static ManualResetEvent sendDone = new ManualResetEvent(false);
         public static ManualResetEvent receiveDone = new ManualResetEvent(false);
+        public static IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+        public static IPAddress ipAddress = ipHostInfo.AddressList[ipHostInfo.AddressList.Length - 1];
+        public static IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 5002);
+        public static Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         public ChatForm() {
             InitializeComponent();
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[ipHostInfo.AddressList.Length - 1];
-            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 5002);
+            //IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            //IPAddress ipAddress = ipHostInfo.AddressList[ipHostInfo.AddressList.Length - 1];
+            //IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 5002);
 
-            // Create a TCP/IP socket.  
-            Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            //// Create a TCP/IP socket.  
+            //Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             // Bind the socket to the local endpoint and listen for incoming connections.  
             try {
@@ -154,25 +158,6 @@ namespace asychClientSocketBeispiel {
             Thread.Sleep(100);
             //sendDone.WaitOne();
             sendThread(client);
-
-            // Release the socket.  
-            //client.Shutdown(SocketShutdown.Both);
-            //client.Close();
-
-            //try {
-            //    chatPeer.workSocket.BeginDisconnect(true, DisconnectCallback, chatPeer);
-            //    chatPeer.workSocket.Close();
-            //    Thread.Sleep(100);
-            //    chatPeer.workSocket.BeginConnect(chatPeer.workSocket.RemoteEndPoint, ConnectCallback, chatPeer);
-            //} catch (Exception ex){
-            //    Console.WriteLine(ex.ToString());
-            //}
-
-            //Thread.Sleep(100);
-            //if (chatPeer.workSocket.Connected) {
-            //    AsynchronousSocketListener.Send(chatPeer.workSocket, "beg{5☻" + chatEingabeFeld.Text + "}end");
-            //}
-            //semaphoreTextSenden.WaitOne();
             chatText.Text = chatText.Text + Environment.NewLine + Environment.NewLine + Form1.eigenerName + ": " + chatEingabeFeld.Text;
             chatEingabeFeld.Text = "";
         }
@@ -267,7 +252,6 @@ namespace asychClientSocketBeispiel {
                             foreach (StateObject item in Form1.chatObjekte) {
                                 if (item.peerName.Contains(aufgeteilteNachricht[1])) {                                                       
                                     item.chatForm.Invoke((MethodInvoker)delegate {
-                                        item.chatForm.Show();
                                         item.chatForm.Activate();
                                         item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + Environment.NewLine + aufgeteilteNachricht[1] + ": " + empfangenerChatText;
                                     });
