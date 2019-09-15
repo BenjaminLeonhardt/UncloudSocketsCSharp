@@ -49,6 +49,7 @@
             this.chatEingabeFeld.Name = "chatEingabeFeld";
             this.chatEingabeFeld.Size = new System.Drawing.Size(380, 80);
             this.chatEingabeFeld.TabIndex = 1;
+            this.chatEingabeFeld.KeyDown += new System.Windows.Forms.KeyEventHandler(this.chatEingabeFeld_KeyDown);
             // 
             // chatSendeButton
             // 

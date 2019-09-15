@@ -265,19 +265,16 @@ namespace asychClientSocketBeispiel {
                             string[] aufgeteilteNachricht = content.Split('☻');
                             string empfangenerChatText = aufgeteilteNachricht[3];
                             foreach (StateObject item in Form1.chatObjekte) {
-                                if (item.peerName.Contains(aufgeteilteNachricht[1])) {                                  
+                                if (item.peerName.Contains(aufgeteilteNachricht[1])) {
+                                    item.chatForm.Activate();                      
                                     item.chatForm.Invoke((MethodInvoker)delegate {
                                         item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + Environment.NewLine + aufgeteilteNachricht[1] + ": " + empfangenerChatText;
                                     });
                                     break;
                                 }
                             }
-                            
                         }
                     }
-
-                    
-
                 }
             } catch (Exception ex) {
                 Console.WriteLine(ex.ToString());
@@ -320,6 +317,15 @@ namespace asychClientSocketBeispiel {
         }
 
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e) {
+            
+        }
+
+        private void chatEingabeFeld_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) {
+                chatSendeButton_Click(sender, e);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
             
         }
     }
