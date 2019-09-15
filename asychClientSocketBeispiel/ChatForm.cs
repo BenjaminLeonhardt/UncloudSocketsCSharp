@@ -252,7 +252,10 @@ namespace asychClientSocketBeispiel {
                             foreach (StateObject item in Form1.chatObjekte) {
                                 if (item.peerName.Contains(aufgeteilteNachricht[1])) {
                                     try {
-                                        item.chatForm.ShowDialog();
+                                        item.chatForm.Invoke((MethodInvoker)delegate {
+                                            item.chatForm.Activate();
+                                            item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + Environment.NewLine + aufgeteilteNachricht[1] + ": " + empfangenerChatText;
+                                        });
                                     } catch (Exception ex) {
                                         Console.WriteLine(ex.ToString());
                                         try {
@@ -266,10 +269,7 @@ namespace asychClientSocketBeispiel {
                                             Console.WriteLine(ex2.ToString());
                                         }
                                     }
-                                    item.chatForm.Invoke((MethodInvoker)delegate {
-                                        item.chatForm.Activate();
-                                        item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + Environment.NewLine + aufgeteilteNachricht[1] + ": " + empfangenerChatText;
-                                    });
+                                    
                                     break;
                                 }
                             }
