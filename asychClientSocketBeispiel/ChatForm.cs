@@ -252,6 +252,7 @@ namespace asychClientSocketBeispiel {
                             foreach (StateObject item in Form1.chatObjekte) {
                                 if (item.peerName.Contains(aufgeteilteNachricht[1])) {                                                       
                                     item.chatForm.Invoke((MethodInvoker)delegate {
+                                        item.chatForm.Show();
                                         item.chatForm.Activate();
                                         item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + Environment.NewLine + aufgeteilteNachricht[1] + ": " + empfangenerChatText;
                                     });
