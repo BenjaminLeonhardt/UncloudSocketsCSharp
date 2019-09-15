@@ -63,9 +63,9 @@
             // 
             this.verbindenButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.verbindenButton.Location = new System.Drawing.Point(308, 705);
+            this.verbindenButton.Location = new System.Drawing.Point(309, 412);
             this.verbindenButton.Name = "verbindenButton";
-            this.verbindenButton.Size = new System.Drawing.Size(75, 23);
+            this.verbindenButton.Size = new System.Drawing.Size(75, 21);
             this.verbindenButton.TabIndex = 32;
             this.verbindenButton.Text = "Verbinden";
             this.verbindenButton.UseVisualStyleBackColor = true;
@@ -75,9 +75,9 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(729, 704);
+            this.button1.Location = new System.Drawing.Point(730, 411);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 22);
             this.button1.TabIndex = 31;
             this.button1.Text = "Öffnen";
             this.button1.UseVisualStyleBackColor = true;
@@ -87,7 +87,7 @@
             // 
             this.pfadTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pfadTextBox.Location = new System.Drawing.Point(552, 706);
+            this.pfadTextBox.Location = new System.Drawing.Point(553, 413);
             this.pfadTextBox.Name = "pfadTextBox";
             this.pfadTextBox.Size = new System.Drawing.Size(170, 20);
             this.pfadTextBox.TabIndex = 30;
@@ -97,7 +97,7 @@
             // 
             this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.nameTextBox.Location = new System.Drawing.Point(552, 676);
+            this.nameTextBox.Location = new System.Drawing.Point(553, 383);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(170, 20);
             this.nameTextBox.TabIndex = 29;
@@ -110,7 +110,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(417, 706);
+            this.label7.Location = new System.Drawing.Point(418, 413);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(129, 20);
             this.label7.TabIndex = 28;
@@ -122,7 +122,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(417, 678);
+            this.label8.Location = new System.Drawing.Point(418, 385);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(55, 20);
             this.label8.TabIndex = 27;
@@ -132,7 +132,7 @@
             // 
             this.ServerPortText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.ServerPortText.Location = new System.Drawing.Point(131, 706);
+            this.ServerPortText.Location = new System.Drawing.Point(132, 413);
             this.ServerPortText.Name = "ServerPortText";
             this.ServerPortText.Size = new System.Drawing.Size(170, 20);
             this.ServerPortText.TabIndex = 26;
@@ -142,7 +142,7 @@
             // 
             this.ServerIPText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.ServerIPText.Location = new System.Drawing.Point(131, 676);
+            this.ServerIPText.Location = new System.Drawing.Point(132, 383);
             this.ServerIPText.Name = "ServerIPText";
             this.ServerIPText.Size = new System.Drawing.Size(170, 20);
             this.ServerIPText.TabIndex = 25;
@@ -154,7 +154,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(11, 706);
+            this.label6.Location = new System.Drawing.Point(12, 413);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(92, 20);
             this.label6.TabIndex = 24;
@@ -166,7 +166,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(11, 678);
+            this.label5.Location = new System.Drawing.Point(12, 385);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(78, 20);
             this.label5.TabIndex = 23;
@@ -221,7 +221,7 @@
             this.FortschrittCol});
             this.filesView2.Location = new System.Drawing.Point(425, 89);
             this.filesView2.Name = "filesView2";
-            this.filesView2.Size = new System.Drawing.Size(383, 565);
+            this.filesView2.Size = new System.Drawing.Size(383, 283);
             this.filesView2.TabIndex = 18;
             this.filesView2.UseCompatibleStateImageBehavior = false;
             this.filesView2.View = System.Windows.Forms.View.Details;
@@ -253,7 +253,7 @@
             this.peersListe.Location = new System.Drawing.Point(15, 89);
             this.peersListe.MultiSelect = false;
             this.peersListe.Name = "peersListe";
-            this.peersListe.Size = new System.Drawing.Size(404, 565);
+            this.peersListe.Size = new System.Drawing.Size(404, 283);
             this.peersListe.TabIndex = 17;
             this.peersListe.UseCompatibleStateImageBehavior = false;
             this.peersListe.View = System.Windows.Forms.View.Details;
@@ -283,7 +283,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(818, 768);
+            this.ClientSize = new System.Drawing.Size(818, 464);
             this.Controls.Add(this.chatButton);
             this.Controls.Add(this.verbindenButton);
             this.Controls.Add(this.button1);
@@ -303,7 +303,7 @@
             this.Controls.Add(this.peersListe);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(834, 807);
-            this.MinimumSize = new System.Drawing.Size(834, 807);
+            this.MinimumSize = new System.Drawing.Size(834, 503);
             this.Name = "Form1";
             this.Text = "Uncloud Client";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);

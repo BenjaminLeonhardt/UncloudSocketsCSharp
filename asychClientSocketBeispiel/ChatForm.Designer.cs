@@ -37,6 +37,7 @@
             this.chatText.Multiline = true;
             this.chatText.Name = "chatText";
             this.chatText.ReadOnly = true;
+            this.chatText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.chatText.Size = new System.Drawing.Size(380, 286);
             this.chatText.TabIndex = 0;
             // 
