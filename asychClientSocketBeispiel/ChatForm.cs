@@ -262,8 +262,9 @@ namespace asychClientSocketBeispiel {
                                             ChatForm chatformNeu = new ChatForm();
                                             chatformNeu.Text = "Chat mit " + aufgeteilteNachricht[1];
                                             item.chatForm = chatformNeu;
+                                            chatformNeu.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + Environment.NewLine + aufgeteilteNachricht[1] + ": " + empfangenerChatText;
                                             chatformNeu.ShowDialog();
-
+                                            item.chatForm.Activate();
                                             //Application.Run(chatform);
                                         } catch (Exception ex2) {
                                             Console.WriteLine(ex2.ToString());
