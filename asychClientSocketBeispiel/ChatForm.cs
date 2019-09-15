@@ -159,6 +159,8 @@ namespace asychClientSocketBeispiel {
             //sendDone.WaitOne();
             sendThread(client);
             chatText.Text = chatText.Text + Environment.NewLine + Environment.NewLine + Form1.eigenerName + ": " + chatEingabeFeld.Text;
+            chatText.SelectionStart = chatText.Text.Length;
+            chatText.ScrollToCaret();
             chatEingabeFeld.Text = "";
         }
 
@@ -192,7 +194,12 @@ namespace asychClientSocketBeispiel {
             //Console.WriteLine("sende zu " + client.RemoteEndPoint.ToString() + " " + data);
             // Begin sending the data to the remote device.  
             if (Form1.run) {
-                client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+                try {
+                    client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.ToString());
+                }
+                
             }
         }
 
@@ -255,6 +262,8 @@ namespace asychClientSocketBeispiel {
                                         item.chatForm.Invoke((MethodInvoker)delegate {
                                             item.chatForm.Activate();
                                             item.chatForm.chatText.Text = item.chatForm.chatText.Text + Environment.NewLine + Environment.NewLine + aufgeteilteNachricht[1] + ": " + empfangenerChatText;
+                                            item.chatForm.chatText.SelectionStart = item.chatForm.chatText.Text.Length;
+                                            item.chatForm.chatText.ScrollToCaret();
                                         });
                                     } catch (Exception ex) {
                                         Console.WriteLine(ex.ToString());
