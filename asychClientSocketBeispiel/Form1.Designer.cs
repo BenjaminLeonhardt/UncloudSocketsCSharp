@@ -302,7 +302,7 @@
             this.Controls.Add(this.filesView2);
             this.Controls.Add(this.peersListe);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MaximumSize = new System.Drawing.Size(834, 807);
+            this.MaximumSize = new System.Drawing.Size(834, 503);
             this.MinimumSize = new System.Drawing.Size(834, 503);
             this.Name = "Form1";
             this.Text = "Uncloud Client";

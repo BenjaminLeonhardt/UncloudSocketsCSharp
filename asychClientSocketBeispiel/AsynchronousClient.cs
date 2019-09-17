@@ -35,24 +35,30 @@ namespace asychClientSocketBeispiel {
             name = _name;
             // Connect to a remote device.  
             try {
-                // Establish the remote endpoint for the socket.  
-                // The name of the   
-                // remote device is "host.contoso.com".  
-                //IPHostEntry ipHostInfo = Dns.GetHostEntry("host.contoso.com");
 
                 string HostName = Dns.GetHostName();
 
                 IPHostEntry hostInfo = Dns.GetHostEntry(HostName);
                 //IpAdresse = hostInfo.AddressList[hostInfo.AddressList.Length - 1].ToString();
 
-                ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
+                string[] ipArray = ip.Split('.');
+                string ipString = ipArray[0] + "." + ipArray[1] + "." + ipArray[2] + ".";
+                foreach (IPAddress item in hostInfo.AddressList) {
+                    if (item.ToString().Contains(ipString)) {
+                        ipAddress = item;
+                    }
+                }
+                //ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
+
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ip), port);
 
                 // Create a TCP/IP socket.  
-                Socket client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Socket client = new Socket(IPAddress.Parse(ip).AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
+                AsyncCallback callback = new AsyncCallback(ConnectCallback);
                 // Connect to the remote endpoint.  
-                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+                client.BeginConnect(remoteEP, callback, client);
+
                 connectDone.WaitOne();
                 //client.BeginDisconnect(true, DisconnectCallback, client);
                 form.Invoke((MethodInvoker)delegate {
@@ -96,6 +102,7 @@ namespace asychClientSocketBeispiel {
                 client.Close();
 
             } catch (Exception e) {
+                
                 Console.WriteLine(e.ToString());
             }
         }

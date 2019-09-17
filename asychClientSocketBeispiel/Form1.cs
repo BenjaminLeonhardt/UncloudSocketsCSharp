@@ -74,14 +74,14 @@ namespace asychClientSocketBeispiel {
             writer.Write(ServerIPText.Text + ";" + ServerPortText.Text + ";" + nameTextBox.Text + ";" + pfadTextBox.Text);
             writer.Close();
             stream.Close();
-
-
+            
             Thread neuerThread = new Thread(threadMethode);
             neuerThread.Start();
 
         }
 
         public void threadMethode() {
+            
             AsynchronousClient.StartClient(ServerIPText.Text, Convert.ToInt32(ServerPortText.Text), nameTextBox.Text, this);
         }
 
@@ -488,8 +488,12 @@ namespace asychClientSocketBeispiel {
                 state.peerName = NameDesAusgewaehltenPeers;
                 chatObjekte.Add(state);
                 Thread.Sleep(100);
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackChat), state);
-
+                try {
+                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackChat), state);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.ToString());
+                }
+                
                 Thread.Sleep(100);
                 //sendDone.WaitOne();
                 sendThreadChat(client);

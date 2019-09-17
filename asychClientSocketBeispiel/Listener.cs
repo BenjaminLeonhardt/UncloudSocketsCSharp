@@ -185,10 +185,11 @@ namespace asychClientSocketBeispiel {
 
                         SendDatei(handler, mesageItems[3]);
                     } else if (aktion == 4) {
+                        
                         string[] contentArray = contentOhneHeaderUndTailer.Split(':');
                         string name = contentArray[1];
                         string ip = contentArray[2];
-
+                        
                         bool gefunden = false;
                         StateObject tmpObjekt = null;
                         foreach (StateObject item in Form1.chatObjekte) {
@@ -199,11 +200,13 @@ namespace asychClientSocketBeispiel {
                         }
 
                         if (gefunden) {
+                            
                             try {
 
                                 ParameterizedThreadStart pts = new ParameterizedThreadStart(chatThread);
                                 Thread sendThreadObj = new Thread(pts);
                                 sendThreadObj.Start(name);
+                                
                             } catch (Exception ex) {
                                 Console.WriteLine(ex.ToString());
                             }
@@ -213,12 +216,13 @@ namespace asychClientSocketBeispiel {
                             tmpObjekt = state;
                             tmpObjekt.peerName = name;
                             Form1.chatObjekte.Add(tmpObjekt);
-
+                           
                             try {
 
                                 ParameterizedThreadStart pts = new ParameterizedThreadStart(chatThread);
                                 Thread sendThreadObj = new Thread(pts);
                                 sendThreadObj.Start(name);
+                                
                             } catch (Exception ex) {
                                 Console.WriteLine(ex.ToString());
                             }
@@ -241,19 +245,22 @@ namespace asychClientSocketBeispiel {
         }
 
         public static void chatThread(Object peerName) {
-            ChatForm chatform = new ChatForm();           
-            ParameterizedThreadStart pts = new ParameterizedThreadStart(chatFensterThread);
-            Thread sendThreadObj = new Thread(pts);
-            sendThreadObj.Start(chatform);
             
+            ChatForm chatform = new ChatForm();
             StateObject tmpStateObject = null;
             string name = (string)peerName;
             foreach (StateObject item in Form1.chatObjekte) {
-                if (name.Contains(item.peerName)) {                   
+                if (name.Contains(item.peerName)) {
                     item.chatForm = chatform;
                     tmpStateObject = item;
                 }
             }
+
+            ParameterizedThreadStart pts = new ParameterizedThreadStart(chatFensterThread);
+            Thread sendThreadObj = new Thread(pts);
+            sendThreadObj.Start(chatform);
+            
+            
             
             Thread.Sleep(100);
             try{
@@ -267,11 +274,11 @@ namespace asychClientSocketBeispiel {
         }
         public static void chatFensterThread(Object fensterObj) {
             ChatForm chatform = (ChatForm)fensterObj;
-
+            
             foreach (StateObject item in Form1.chatObjekte) {
                 if (chatform == item.chatForm) {
                     chatform.Text = "Chat mit " + item.peerName;
-                    chatform.Show();
+                    chatform.ShowDialog();
                 }
             }
             Application.Run(chatform);
