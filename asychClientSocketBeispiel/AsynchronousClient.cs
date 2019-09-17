@@ -46,6 +46,7 @@ namespace asychClientSocketBeispiel {
                 foreach (IPAddress item in hostInfo.AddressList) {
                     if (item.ToString().Contains(ipString)) {
                         ipAddress = item;
+                        break;
                     }
                 }
                 //ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
