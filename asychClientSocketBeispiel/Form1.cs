@@ -452,6 +452,7 @@ namespace asychClientSocketBeispiel {
                 if (item.peerName.Equals(NameDesAusgewaehltenPeers)) {
                     tmpObjekt = item;
                     gefunden = true;
+                    break;
                 }
             }
 

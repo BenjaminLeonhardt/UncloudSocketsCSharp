@@ -105,7 +105,7 @@ namespace asychClientSocketBeispiel {
                 if (this.Text.Contains(item.peerName)) {
                     chatPeer = item;
                     item.chatForm = this;
-                    
+                    break;
                 }
             }
 

@@ -188,52 +188,29 @@ namespace asychClientSocketBeispiel {
 
                         int indexAktionsTrenner = responseOhneHeaderUndTailer.IndexOf("☻");
                         string responeOhneAktion = "";
-                        for (int j = indexAktionsTrenner + 1; j < responseOhneHeaderUndTailer.Length; j++) {
-                            responeOhneAktion += responseOhneHeaderUndTailer[j];
-                        }
+                        string[] responeOhneAktionArray = responseOhneHeaderUndTailer.Split('☻');
+                        responeOhneAktion = responeOhneAktionArray[1];
+                        //for (int j = indexAktionsTrenner + 1; j < responseOhneHeaderUndTailer.Length; j++) {
+                        //    responeOhneAktion += responseOhneHeaderUndTailer[j];
+                        //}
 
                         List<Peer> peersListeLokal = new List<Peer>();
 
                         List<string> peersAlsStrings = new List<string>();
-                        
-                        for (int i = 0; i < responeOhneAktion.Length; i++) {
-                            string tmp = "";
-                            for (int j = i; j < responeOhneAktion.Length; j++) {
-                                if (responeOhneAktion[j] == '♥') {
-                                    i = j;
-                                    break;
-                                }
-                                tmp += responeOhneAktion[j];   
-                            }
-                            if (!tmp.Equals("")) {
-                                peersAlsStrings.Add(tmp);
-                            }                          
-                        }
+                        string [] peersAlsStringsArray = responeOhneAktion.Split('♥');
 
-                        foreach (string item in peersAlsStrings) {
-                            Peer p = new Peer();
-                            int j = 0;
-                            for(j = 0; j < item.Length; j++) {
-                                if(item[j] == ':') {
-                                    break;
-                                }
-                                p.ip += item[j];
+
+                        foreach (string item in peersAlsStringsArray) {
+                            if (!item.Equals("")) {
+                                Peer p = new Peer();
+                                string[] einzelnerPeerAlsArray = item.Split(':');
+                                p.ip = einzelnerPeerAlsArray[0];
+                                p.name = einzelnerPeerAlsArray[1];
+                                p.os = einzelnerPeerAlsArray[2];
+
+                                peersListeLokal.Add(p);
                             }
-                            j++;
-                            for (; j < item.Length; j++) {
-                                if (item[j] == ':') {
-                                    break;
-                                }
-                                p.name += item[j];
-                            }
-                            j++;
-                            for (; j < item.Length; j++) {
-                                if (item[j] == ':') {
-                                    break;
-                                }
-                                p.os += item[j];
-                            }
-                            peersListeLokal.Add(p);
+                            
                         }
 
                         if(peersListeLokal.Count != peersListe.Count) {                                                     

@@ -196,6 +196,7 @@ namespace asychClientSocketBeispiel {
                             if (item.peerName.Equals(name)) {
                                 tmpObjekt = item;
                                 gefunden = true;
+                                break;
                             }
                         }
 
@@ -214,6 +215,7 @@ namespace asychClientSocketBeispiel {
 
                         } else {
                             tmpObjekt = state;
+                            tmpObjekt.ip = ip;
                             tmpObjekt.peerName = name;
                             Form1.chatObjekte.Add(tmpObjekt);
                            
@@ -253,6 +255,7 @@ namespace asychClientSocketBeispiel {
                 if (name.Contains(item.peerName)) {
                     item.chatForm = chatform;
                     tmpStateObject = item;
+                    break;
                 }
             }
 
