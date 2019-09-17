@@ -284,7 +284,7 @@ namespace asychClientSocketBeispiel {
                     chatform.ShowDialog();
                 }
             }
-            Application.Run(chatform);
+            //Application.Run(chatform);
         }
 
 
