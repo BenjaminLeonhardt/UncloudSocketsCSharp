@@ -461,7 +461,7 @@ namespace asychClientSocketBeispiel {
                     ChatForm chatformNeu = new ChatForm();
                     chatformNeu.Text = "Chat mit " + tmpObjekt.peerName;
                     tmpObjekt.chatForm = chatformNeu;
-                    chatformNeu.ShowDialog();
+                    chatformNeu.Show();
                     
                     //Application.Run(chatform);
                 } catch (Exception ex) {
