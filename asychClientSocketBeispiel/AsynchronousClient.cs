@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Management;
 
 namespace asychClientSocketBeispiel {
 
@@ -114,11 +115,11 @@ namespace asychClientSocketBeispiel {
             client.EndDisconnect(ar);
         }
 
-        static void sendThread(Object client) {
+        static void sendThread(Object client) {      
             // Send test data to the remote device.  
-            string text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":♥" + "}end";
+            string text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":Windows:♥" + "}end";
             while (Form1.run) {
-                text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":♥" + "}end";
+                text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":Windows:♥" + "}end";
                 Send((Socket)client, text);
                 Thread.Sleep(1000);
             }

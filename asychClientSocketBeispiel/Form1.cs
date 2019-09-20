@@ -481,7 +481,7 @@ namespace asychClientSocketBeispiel {
                 Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
                 client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
-                connectDone.WaitOne();
+                //connectDone.WaitOne();
 
                 StateObject state = new StateObject();
                 state.workSocket = client;
