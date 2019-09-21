@@ -170,7 +170,7 @@ namespace asychClientSocketBeispiel {
                         FileInfo[] fileInfoArray = directoryInfo.GetFiles();
                         string answer = "beg{2☻";
                         foreach (FileInfo item in fileInfoArray) {
-                            answer += item.Name + ";" + item.Length + "|";
+                            answer += item.Name + ";" + item.Length + "♦";
                         }
                         answer += "}end";
 

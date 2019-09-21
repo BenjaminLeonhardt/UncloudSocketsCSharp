@@ -209,7 +209,7 @@ namespace asychClientSocketBeispiel {
                     }
                     if (aktion == 2) {
                         string[] ohneAktion = responseOhneHeaderUndTailer.Split('☻');
-                        string[] dateienMitGroesse = ohneAktion[1].Split('|');
+                        string[] dateienMitGroesse = ohneAktion[1].Split('♦');
 
                         Invoke((MethodInvoker)delegate {
                             filesView2.Items.Clear();
