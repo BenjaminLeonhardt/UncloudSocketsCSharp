@@ -261,7 +261,7 @@ namespace asychClientSocketBeispiel {
 
         }
 
-        private static void Send(Socket client, String data) {
+        private void Send(Socket client, String data) {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.UTF8.GetBytes(data);
             //Console.WriteLine("sende zu " + client.RemoteEndPoint.ToString() + " " + data);
@@ -271,6 +271,15 @@ namespace asychClientSocketBeispiel {
                     client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
                 } catch (Exception ex) {
                     Console.WriteLine(ex.ToString());
+                    string ip = client.RemoteEndPoint.ToString();
+                    string ipOfClient = ip.Substring(0, ip.Length - 1);
+                    IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ipOfClient), peersPort);
+                    Socket clientNeu = new Socket(SocketType.Stream, ProtocolType.Tcp);
+
+                    clientNeu.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+                    connectDone.WaitOne();
+
+                    clientNeu.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
                 }
                 
             }
@@ -301,7 +310,7 @@ namespace asychClientSocketBeispiel {
             foreach (Socket clientTmp in getThisFileClients){
                 try{
                     string[] ipOfClientArray = clientTmp.RemoteEndPoint.ToString().Split(':');
-                    string ipOfClient = ipOfClientArray[3].Substring(0, ipOfClientArray[3].Length - 2);
+                    string ipOfClient = ipOfClientArray[3].Substring(0, ipOfClientArray[3].Length - 1);
                     if (ipOfClient.Equals(IpOfSelectedPeer)){
                         client = clientTmp;
                         gefunden = true;
@@ -317,10 +326,11 @@ namespace asychClientSocketBeispiel {
             if (!gefunden) {             
                 client = new Socket(SocketType.Stream, ProtocolType.Tcp);
                 getThisFileClients.Add(client);
+                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+                connectDone.WaitOne();
             }
 
-            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
-            connectDone.WaitOne();
+            
 
             StateObject state = new StateObject();
             state.workSocket = client;
@@ -461,7 +471,7 @@ namespace asychClientSocketBeispiel {
             IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
 
             // Send test data to the remote device.  
-            string text = "beg{" + "3" + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":" + filename + ":♥" + "}end";
+            string text = "beg{" + (int)aktionEnum.sendeDatei + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":" + filename + ":♥" + "}end";
             Send((Socket)client, text);
 
         }
