@@ -292,10 +292,6 @@ namespace asychClientSocketBeispiel {
             }
         }
 
-        private void filesView2_SelectedIndexChanged(object sender, EventArgs e) {
-
-        }
-
         List<Socket> getThisFileClients = new List<Socket>();
 
         public void getThisFileThread(Object filename) {
@@ -454,7 +450,6 @@ namespace asychClientSocketBeispiel {
             client.EndSendFile(ar);
             sendDone.Set();
         }
-
 
         void sendThreadFile(Object client, string filename) {
 
