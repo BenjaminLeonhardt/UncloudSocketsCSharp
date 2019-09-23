@@ -328,7 +328,17 @@ namespace asychClientSocketBeispiel {
             Socket client = state.workSocket;
 
             // Read data from the remote device.  
-            int bytesRead = client.EndReceive(ar);
+            int bytesRead = -1;
+            try
+            {
+                bytesRead = client.EndReceive(ar);
+
+            }
+            catch (Exception)
+            {
+                bytesRead = -1;
+            }
+            
 
             if (bytesRead > 0) {
                 // There might be more data, so store the data received so far.  
