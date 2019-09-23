@@ -258,11 +258,11 @@ namespace asychClientSocketBeispiel {
                         if (Form1.run) {
                             client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
                         }else {
-                        client.Disconnect(false);
-                        client.Close();
-                        client.Dispose();
-                        Application.Exit();
-                    }
+                            client.Disconnect(false);
+                            client.Close();
+                            client.Dispose();
+                            Application.Exit();
+                        }
                     } else {
                     // All the data has arrived; put it in response.  
                     if (state.sb.Length > 1) {

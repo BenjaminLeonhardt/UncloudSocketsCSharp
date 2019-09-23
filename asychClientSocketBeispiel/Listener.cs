@@ -17,7 +17,9 @@ namespace asychClientSocketBeispiel {
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
-
+    enum aktionEnum {
+        heartbeat=1,sendeAlleDateien,sendeDatei,chatOeffnen,chatMessage
+    }
 
     // State object for reading client data asynchronously  
     public class StateObject {
@@ -163,7 +165,7 @@ namespace asychClientSocketBeispiel {
                     int aktion = -1;
 
                     aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
-                    if (aktion == 2) {
+                    if (aktion == (int)aktionEnum.sendeAlleDateien) {
 
 
                         DirectoryInfo directoryInfo = new DirectoryInfo(formStatic.pfadTextBox.Text);
@@ -177,14 +179,14 @@ namespace asychClientSocketBeispiel {
                         Console.WriteLine(answer);
 
                         Send(handler, answer);
-                    } else if (aktion == 3) {
+                    } else if (aktion == (int)aktionEnum.sendeDatei) {
                         string[] mesageItems = contentOhneHeaderUndTailer.Split(':');
                         if (mesageItems[3].Contains("..\\")) {
                             return;
                         }
 
                         SendDatei(handler, mesageItems[3]);
-                    } else if (aktion == 4) {
+                    } else if (aktion == (int)aktionEnum.chatOeffnen) {
                         
                         string[] contentArray = contentOhneHeaderUndTailer.Split(':');
                         string name = contentArray[1];
@@ -229,7 +231,7 @@ namespace asychClientSocketBeispiel {
                                 Console.WriteLine(ex.ToString());
                             }
                         }
-                    } else if (aktion == 5) {
+                    } else if (aktion == (int)aktionEnum.chatMessage) {
                         try {
                             state.chatForm.Invoke((MethodInvoker)delegate {
                                 state.chatForm.chatText.Text = state.chatForm.chatText.Text + "\n" + contentOhneHeaderUndTailer.Substring(2);
