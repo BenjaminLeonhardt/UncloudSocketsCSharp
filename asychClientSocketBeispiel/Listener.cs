@@ -181,7 +181,7 @@ namespace asychClientSocketBeispiel {
                         Send(handler, answer);
                     } else if (aktion == (int)aktionEnum.sendeDatei) {
                         string[] mesageItems = contentOhneHeaderUndTailer.Split(':');
-                        if (mesageItems[3].Contains("..\\")) {
+                        if (mesageItems[3].Contains("..\\")|| mesageItems[3].Contains("../")) {
                             return;
                         }
 
@@ -311,6 +311,7 @@ namespace asychClientSocketBeispiel {
                     if (item.Name.Equals(dateiname))
                     {
                         byteData = new byte[item.Length];
+                        break;
                     }
                 }
                 fileStream.Read(byteData, 0, byteData.Length);
