@@ -304,8 +304,9 @@ namespace asychClientSocketBeispiel {
             bool gefunden = false;
             foreach (Socket clientTmp in getThisFileClients){
                 try{
-                    string[] ipOfClient = clientTmp.RemoteEndPoint.ToString().Split(':');
-                    if (ipOfClient[0].Equals(IpOfSelectedPeer)){
+                    string[] ipOfClientArray = clientTmp.RemoteEndPoint.ToString().Split(':');
+                    string ipOfClient = ipOfClientArray[3].Substring(0, ipOfClientArray[3].Length - 2);
+                    if (ipOfClient.Equals(IpOfSelectedPeer)){
                         client = clientTmp;
                         gefunden = true;
                     }
