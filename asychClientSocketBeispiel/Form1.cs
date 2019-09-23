@@ -296,9 +296,31 @@ namespace asychClientSocketBeispiel {
 
         }
 
+        List<Socket> getThisFileClients = new List<Socket>();
+
         public void getThisFileThread(Object filename) {
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(IpOfSelectedPeer), peersPort);
-            Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket client = null;
+            bool gefunden = false;
+            foreach (Socket clientTmp in getThisFileClients){
+                try{
+                    string[] ipOfClient = clientTmp.RemoteEndPoint.ToString().Split(':');
+                    if (ipOfClient[0].Equals(IpOfSelectedPeer)){
+                        client = clientTmp;
+                        gefunden = true;
+                    }
+                }catch (Exception ex){
+                    client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                    getThisFileClients.Add(client);
+                    Console.WriteLine(ex.ToString());
+                }
+                
+                
+            }
+            if (!gefunden) {             
+                client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                getThisFileClients.Add(client);
+            }
 
             client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
             connectDone.WaitOne();
@@ -312,8 +334,16 @@ namespace asychClientSocketBeispiel {
 
 
             Thread.Sleep(100);
-            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
+            try
+            {
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            
             Thread.Sleep(100);
             //sendDone.WaitOne();
             sendThreadFile(client, (string)filename);
