@@ -306,29 +306,29 @@ namespace asychClientSocketBeispiel {
         public void getThisFileThread(Object filename) {
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(IpOfSelectedPeer), peersPort);
             Socket client = null;
-            bool gefunden = false;
-            foreach (Socket clientTmp in getThisFileClients){
-                try{
-                    string[] ipOfClientArray = clientTmp.RemoteEndPoint.ToString().Split(':');
-                    string ipOfClient = ipOfClientArray[3].Substring(0, ipOfClientArray[3].Length - 1);
-                    if (ipOfClient.Equals(IpOfSelectedPeer)){
-                        client = clientTmp;
-                        gefunden = true;
-                    }
-                }catch (Exception ex){
-                    client = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                    getThisFileClients.Add(client);
-                    Console.WriteLine(ex.ToString());
-                }
+            //bool gefunden = false;
+            //foreach (Socket clientTmp in getThisFileClients){
+            //    try{
+            //        string[] ipOfClientArray = clientTmp.RemoteEndPoint.ToString().Split(':');
+            //        string ipOfClient = ipOfClientArray[3].Substring(0, ipOfClientArray[3].Length - 1);
+            //        if (ipOfClient.Equals(IpOfSelectedPeer)){
+            //            client = clientTmp;
+            //            gefunden = true;
+            //        }
+            //    }catch (Exception ex){
+            //        client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            //        getThisFileClients.Add(client);
+            //        Console.WriteLine(ex.ToString());
+            //    }
                 
                 
-            }
-            if (!gefunden) {             
-                client = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                getThisFileClients.Add(client);
-                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
-                connectDone.WaitOne();
-            }
+            //}
+            //if (!gefunden) {             
+            client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            getThisFileClients.Add(client);
+            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+            connectDone.WaitOne();
+            //}
 
             
 
