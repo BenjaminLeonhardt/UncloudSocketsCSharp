@@ -241,7 +241,7 @@ namespace asychClientSocketBeispiel {
                         }
                         
                     }
-                    } else {
+                } else {
                     // Not all data received. Get more.  
                     handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
                 }

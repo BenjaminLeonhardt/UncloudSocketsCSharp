@@ -62,6 +62,10 @@ namespace asychClientSocketBeispiel {
 
         }
 
+        private void button1_Click(object sender, EventArgs e) {
+
+        }
+
         private void verbindenButton_Click(object sender, EventArgs e) {
 
 
@@ -267,7 +271,7 @@ namespace asychClientSocketBeispiel {
                     client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
                 } catch (Exception ex) {
                     Console.WriteLine(ex.ToString());
-                    string ip = IpOfSelectedPeer;
+                    string ip = client.RemoteEndPoint.ToString();
                     string ipOfClient = ip.Substring(0, ip.Length - 1);
                     IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ipOfClient), peersPort);
                     Socket clientNeu = new Socket(SocketType.Stream, ProtocolType.Tcp);
@@ -297,13 +301,37 @@ namespace asychClientSocketBeispiel {
             }
         }
 
+        List<Socket> getThisFileClients = new List<Socket>();
 
         public void getThisFileThread(Object filename) {
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(IpOfSelectedPeer), peersPort);
-            Socket client = client = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
-            connectDone.WaitOne();
+            Socket client = null;
+            bool gefunden = false;
+            foreach (Socket clientTmp in getThisFileClients){
+                try{
+                    string[] ipOfClientArray = clientTmp.RemoteEndPoint.ToString().Split(':');
+                    string ipOfClient = ipOfClientArray[3].Substring(0, ipOfClientArray[3].Length - 1);
+                    if (ipOfClient.Equals(IpOfSelectedPeer)){
+                        client = clientTmp;
+                        gefunden = true;
+                    }
+                }catch (Exception ex){
+                    client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                    getThisFileClients.Add(client);
+                    Console.WriteLine(ex.ToString());
+                }
+                
+                
+            }
+            if (!gefunden) {             
+                client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                getThisFileClients.Add(client);
+                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+                connectDone.WaitOne();
+            }
+
             
+
             StateObject state = new StateObject();
             state.workSocket = client;
             state.dateiName = (string)filename;
@@ -418,8 +446,6 @@ namespace asychClientSocketBeispiel {
                 //client.BeginSend(stateFile.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(AsynchronousFileSendCallback), state);
                 //Thread.Sleep(100);
                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallbackFile), state);
-                //client.Close();
-                //client.Dispose();
 
             } catch {
 
@@ -434,7 +460,6 @@ namespace asychClientSocketBeispiel {
             client.EndSendFile(ar);
             sendDone.Set();
         }
-
 
         void sendThreadFile(Object client, string filename) {
 
