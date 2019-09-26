@@ -129,35 +129,33 @@ namespace asychClientSocketBeispiel {
                 }
             }
 
-        
-            foreach (StateObject item in Form1.chatObjekte) {
-                if (this.Text.Contains(item.peerName)) {                   
-                    item.ip = _ip;
+            chatPeer.ip = _ip;
+
+            if (chatPeer.chatSocket == null) {
+                //_ip = ipArray[3].Substring(0, ipArray[3].Length - 1);
+                IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), 5002);
+                Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                chatPeer.chatSocket = client;
+                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+                //connectDone.WaitOne();
+
+                StateObject state = new StateObject();
+                state.workSocket = client;
+                Thread.Sleep(100);
+                try {
+                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.ToString());
                 }
+
+                Thread.Sleep(100);
+                //sendDone.WaitOne();
+                sendThread(client);
+            }else {
+                sendThread(chatPeer.chatSocket);
             }
-
-
             
-            //_ip = ipArray[3].Substring(0, ipArray[3].Length - 1);
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), 5002);
-            Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
-
-            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
-            //connectDone.WaitOne();
-
-            StateObject state = new StateObject();
-            state.workSocket = client;
-            Thread.Sleep(100);
-            try {
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
-
-            } catch (Exception ex) {
-                Console.WriteLine(ex.ToString());
-            }
-
-            Thread.Sleep(100);
-            //sendDone.WaitOne();
-            sendThread(client);
             chatText.Text = chatText.Text + Environment.NewLine + Environment.NewLine + Form1.eigenerName + ": " + chatEingabeFeld.Text;
             chatText.SelectionStart = chatText.Text.Length;
             chatText.ScrollToCaret();
@@ -165,13 +163,6 @@ namespace asychClientSocketBeispiel {
         }
 
         void sendThread(Object client) {
-            StateObject chatPeer = new StateObject();
-            foreach (StateObject item in Form1.chatObjekte) {
-                if (this.Text.Contains(item.peerName)) {
-                    chatPeer = item;
-                    item.chatForm = this;
-                }
-            }
 
             string HostName = Dns.GetHostName();
 
@@ -252,7 +243,7 @@ namespace asychClientSocketBeispiel {
                         int aktion = -1;
 
                         aktion = Int32.Parse("" + contentOhneHeaderUndTailer[0]);
-                        if (aktion == 5) {
+                        if (aktion == (int)aktionEnum.chatMessage) {
 
                             string[] aufgeteilteNachricht = content.Split('☻');
                             string empfangenerChatText = aufgeteilteNachricht[3];
@@ -315,8 +306,9 @@ namespace asychClientSocketBeispiel {
 
                 // Complete the connection.  
                 client.EndDisconnect(ar);
+                client.Shutdown(SocketShutdown.Both);
                 client.Close();
-                
+
                 Console.WriteLine("Socket connected to {0}", client.RemoteEndPoint.ToString());
 
                 // Signal that the connection has been made.  

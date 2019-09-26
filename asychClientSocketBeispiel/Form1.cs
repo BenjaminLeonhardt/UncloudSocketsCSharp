@@ -278,8 +278,14 @@ namespace asychClientSocketBeispiel {
 
                     clientNeu.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
                     connectDone.WaitOne();
-
-                    clientNeu.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+                   
+                    try {
+                        Thread.Sleep(100);
+                        clientNeu.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+                    } catch (Exception ex2) {
+                        Console.WriteLine(ex2.ToString());
+                    }
+                    
                 }
                 
             }
@@ -559,7 +565,7 @@ namespace asychClientSocketBeispiel {
             IPAddress ipAddress = hostInfo.AddressList[hostInfo.AddressList.Length - 1];
 
             // Send test data to the remote device.  
-            string text = "beg{" + "4" + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":♥" + "}end";
+            string text = "beg{" + (int)aktionEnum.chatOeffnen + ":" + nameTextBox.Text + ":" + ipAddress.ToString() + ":♥" + "}end";
             Send((Socket)client, text);
 
         }

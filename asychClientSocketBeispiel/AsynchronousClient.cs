@@ -32,6 +32,7 @@ namespace asychClientSocketBeispiel {
         private static String response = String.Empty;
 
         public static void StartClient(string ip, int port, string _name, Form1 form) {
+            Form1.run = true;
             formStatic = form;
             name = _name;
             // Connect to a remote device.  
@@ -110,16 +111,23 @@ namespace asychClientSocketBeispiel {
         }
 
         private static void DisconnectCallback(IAsyncResult ar) {
+            formStatic.Invoke((MethodInvoker)delegate {
+                formStatic.connectionText.Text = "Disconnected";
+                formStatic.connectionText.ForeColor = Color.Red;
+                formStatic.verbindenButton.Enabled = true;
+            });
             // Complete the disconnect request.
             Socket client = (Socket)ar.AsyncState;
             client.EndDisconnect(ar);
+            client.Shutdown(SocketShutdown.Both);
+            client.Close();
         }
 
         static void sendThread(Object client) {      
             // Send test data to the remote device.  
             string text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":Windows:♥" + "}end";
             while (Form1.run) {
-                text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":Windows:♥" + "}end";
+                //text = "beg{" + "1" + ":" + Form1.eigenerName + ":" + ipAddress + ":Windows:♥" + "}end";
                 Send((Socket)client, text);
                 Thread.Sleep(1000);
             }

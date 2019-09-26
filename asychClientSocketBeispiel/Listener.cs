@@ -25,6 +25,7 @@ namespace asychClientSocketBeispiel {
     public class StateObject {
         // Client  socket.  
         public Socket workSocket = null;
+        public Socket chatSocket = null;
         // Size of receive buffer.  
         public const int BufferSize = 65535;
         // Receive buffer.  
