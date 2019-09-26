@@ -277,9 +277,11 @@ namespace asychClientSocketBeispiel {
                         }
                     }
                 }
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
             } catch (Exception ex) {
                 Console.WriteLine(ex.ToString());
             }
+            
         }
 
         public void ConnectCallback(IAsyncResult ar) {
