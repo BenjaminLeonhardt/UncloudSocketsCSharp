@@ -131,7 +131,7 @@ namespace asychClientSocketBeispiel {
 
             chatPeer.ip = _ip;
 
-            if (chatPeer.chatSocket == null) {
+            if (chatPeer.chatSocket == null || !chatPeer.chatSocket.Connected) {
                 //_ip = ipArray[3].Substring(0, ipArray[3].Length - 1);
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(_ip), 5002);
                 Socket client = new Socket(SocketType.Stream, ProtocolType.Tcp);
